@@ -15,6 +15,9 @@ data class Configs(
         @SerializedName("クリエイティブモード時に道具の耐久値を減らす")
         val onCreativeDurabilityReduce: Boolean = false,
 
+        @SerializedName("ブロックを破壊した時にメッセージを表示する")
+        val onBlockBreakMessage: Boolean = true,
+
         @SerializedName("一度に壊せるブロックの数")
         val maxBlockAmount: Int = 200,
 

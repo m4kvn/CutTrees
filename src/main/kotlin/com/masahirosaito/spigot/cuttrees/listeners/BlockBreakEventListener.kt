@@ -44,9 +44,10 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         breakBlocks(blocks, tool)
 
         if (tool.isBreak(damage)) {
+            sendDamageMessage(player, tool, damage, blocks.size)
             player.onBreakItemInMainHand()
         } else {
-            sendDamageMessage(player, tool, damage)
+            sendDamageMessage(player, tool, damage, blocks.size)
             tool.damage(damage)
         }
     }
@@ -81,9 +82,13 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     private fun isReduce(tool: ItemStack): Boolean =
             Random().nextInt(tool.getEnchantmentLevel(Enchantment.DURABILITY)) == 0
 
-    private fun sendDamageMessage(player: Player, tool: ItemStack, damage: Int) =
-            player.sendMessage("耐久値: ${tool.getRemainingDurability()}" +
-                    " -> ${tool.getRemainingDurability() - damage}")
+    private fun sendDamageMessage(player: Player, tool: ItemStack, damage: Int, blocksNum: Int) {
+        if (configs.onBlockBreakMessage) {
+            val oldDurability = tool.getRemainingDurability()
+            val newDurability = if (oldDurability - damage >= 0) oldDurability - damage else 0
+            player.sendMessage("耐久値: $oldDurability -> $newDurability, ブロック数: $blocksNum")
+        }
+    }
 
     fun register() = plugin.server.pluginManager.registerEvents(this, plugin)
 }
