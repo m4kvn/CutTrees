@@ -2,11 +2,14 @@ package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.utils.*
+import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.inventory.ItemStack
 
 class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     val configs = plugin.configs
@@ -17,10 +20,23 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
             !configs.isValid(event.block) -> return
             !configs.isValid(event.player.itemInMainHand()) -> return
         }
-        val block = event.block
-        val blocks = calcBreakBLocks(block)
+
+        var blocks = calcBreakBLocks(event.block)
+        val player = event.player
+        val tool = player.itemInMainHand()
+
+        if (tool.isBraek(blocks.size)) {
+            blocks = blocks.take(tool.getRemainingDurability())
+        }
 
         blocks.forEach { it.breakNaturally(event.player.itemInMainHand()) }
+
+        if (tool.isBraek(blocks.size)) {
+            player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
+            player.inventory.itemInMainHand = ItemStack(Material.AIR)
+        } else {
+            tool.durability = tool.durability.plus(blocks.size).toShort()
+        }
     }
 
     private fun calcBreakBLocks(block: Block): List<Block> {
