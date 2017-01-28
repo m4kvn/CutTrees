@@ -23,7 +23,8 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         val player = event.player
         val tool = player.itemInMainHand()
 
-        if (player.isCreativeMode() && !configs.onCreativeDurabilityReduce) {
+        if ((player.isCreativeMode() && !configs.onCreativeDurabilityReduce)
+                || (tool.itemMeta.spigot().isUnbreakable)) {
             breakBlocks(blocks, tool)
             return
         }
