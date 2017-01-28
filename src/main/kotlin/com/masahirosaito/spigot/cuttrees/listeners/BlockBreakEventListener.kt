@@ -3,11 +3,14 @@ package com.masahirosaito.spigot.cuttrees.listeners
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.utils.*
 import org.bukkit.block.Block
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.inventory.ItemStack
+import java.util.*
 
 class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     val configs = plugin.configs
@@ -25,16 +28,25 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
             return
         }
 
-        if (tool.isBreak(blocks.size)) {
+        var damage = blocks.size
+
+        if (tool.containsEnchantment(Enchantment.DURABILITY)) {
+            for (i in 1..blocks.size) {
+                damage -= if (isReduce(tool)) 0 else 1
+            }
+        }
+
+        if (tool.isBreak(damage)) {
             blocks = blocks.take(tool.getRemainingDurability())
         }
 
         breakBlocks(blocks, tool)
 
-        if (tool.isBreak(blocks.size)) {
+        if (tool.isBreak(damage)) {
             player.onBreakItemInMainHand()
         } else {
-            tool.damage(blocks.size)
+            sendDamageMessage(player, tool, damage)
+            tool.damage(damage)
         }
     }
 
@@ -62,9 +74,15 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         return checkedBlocks.toList()
     }
 
-    private fun breakBlocks(blocks: Collection<Block>, tool: ItemStack) {
-        blocks.forEach { it.breakNaturally(tool) }
-    }
+    private fun breakBlocks(blocks: Collection<Block>, tool: ItemStack) =
+            blocks.forEach { it.breakNaturally(tool) }
+
+    private fun isReduce(tool: ItemStack): Boolean =
+            Random().nextInt(tool.getEnchantmentLevel(Enchantment.DURABILITY)) == 0
+
+    private fun sendDamageMessage(player: Player, tool: ItemStack, damage: Int) =
+            player.sendMessage("耐久値: ${tool.getRemainingDurability()}" +
+                    " -> ${tool.getRemainingDurability() - damage}")
 
     fun register() = plugin.server.pluginManager.registerEvents(this, plugin)
 }
