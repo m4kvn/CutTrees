@@ -23,8 +23,7 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         val player = event.player
         val tool = player.itemInMainHand()
 
-        if ((player.isCreativeMode() && !configs.onCreativeDurabilityReduce)
-                || (tool.itemMeta.spigot().isUnbreakable)) {
+        if (isNotReduceToolDurability(player, tool)) {
             breakBlocks(blocks, tool)
             return
         }
@@ -88,6 +87,12 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
             val newDurability = if (oldDurability - damage >= 0) oldDurability - damage else 0
             player.sendMessage("耐久値: $oldDurability -> $newDurability, ブロック数: $blocksNum")
         }
+    }
+
+    private fun isNotReduceToolDurability(player: Player, tool: ItemStack): Boolean = when {
+        (player.isCreativeMode() && !configs.onCreativeDurabilityReduce) -> true
+        (tool.itemMeta.spigot().isUnbreakable) -> true
+        else -> false
     }
 
     fun register() = plugin.server.pluginManager.registerEvents(this, plugin)
