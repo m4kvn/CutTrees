@@ -12,6 +12,9 @@ import java.io.File
 
 data class Configs(
 
+        @SerializedName("クリエイティブモード時に道具の耐久値を減らす")
+        val onCreativeDurabilityReduce: Boolean = false,
+
         @SerializedName("一度に壊せるブロックの数")
         val maxBlockAmount: Int = 200,
 

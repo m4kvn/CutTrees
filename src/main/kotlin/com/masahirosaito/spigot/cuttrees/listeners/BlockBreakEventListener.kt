@@ -2,8 +2,6 @@ package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.utils.*
-import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -16,27 +14,34 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
-        when {
-            !configs.isValid(event.block) -> return
-            !configs.isValid(event.player.itemInMainHand()) -> return
-        }
+        if (!isValid(event)) return
 
         var blocks = calcBreakBLocks(event.block)
         val player = event.player
         val tool = player.itemInMainHand()
 
-        if (tool.isBraek(blocks.size)) {
+        if (player.isCreativeMode() && !configs.onCreativeDurabilityReduce) {
+            breakBlocks(blocks, tool)
+            return
+        }
+
+        if (tool.isBreak(blocks.size)) {
             blocks = blocks.take(tool.getRemainingDurability())
         }
 
-        blocks.forEach { it.breakNaturally(event.player.itemInMainHand()) }
+        breakBlocks(blocks, tool)
 
-        if (tool.isBraek(blocks.size)) {
-            player.world.playSound(player.location, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
-            player.inventory.itemInMainHand = ItemStack(Material.AIR)
+        if (tool.isBreak(blocks.size)) {
+            player.onBreakItemInMainHand()
         } else {
-            tool.durability = tool.durability.plus(blocks.size).toShort()
+            tool.damage(blocks.size)
         }
+    }
+
+    private fun isValid(event: BlockBreakEvent): Boolean = when {
+        !configs.isValid(event.block) -> false
+        !configs.isValid(event.player.itemInMainHand()) -> false
+        else -> true
     }
 
     private fun calcBreakBLocks(block: Block): List<Block> {
@@ -55,6 +60,10 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
             )
         }
         return checkedBlocks.toList()
+    }
+
+    private fun breakBlocks(blocks: Collection<Block>, tool: ItemStack) {
+        blocks.forEach { it.breakNaturally(tool) }
     }
 
     fun register() = plugin.server.pluginManager.registerEvents(this, plugin)
