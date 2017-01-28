@@ -25,6 +25,7 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
 
         if (isNotReduceToolDurability(player, tool)) {
             breakBlocks(blocks, tool)
+            sendDamageMessage(player, tool, 0, blocks.size)
             return
         }
 
