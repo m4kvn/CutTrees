@@ -22,14 +22,14 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         var blocks = calcBreakBLocks(event.block)
         val player = event.player
         val tool = player.itemInMainHand()
+        val durability = tool.getRemainingDurability()
+        var damage = blocks.size
 
         if (isNotReduceToolDurability(player, tool)) {
             breakBlocks(blocks, tool)
-            sendDamageMessage(player, tool, 0, blocks.size)
+            sendBlockBreakMessage(player, durability, 0, blocks.size)
             return
         }
-
-        var damage = blocks.size
 
         if (tool.containsEnchantment(Enchantment.DURABILITY)) {
             for (i in 1..blocks.size) {
@@ -44,12 +44,12 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         breakBlocks(blocks, tool)
 
         if (tool.isBreak(damage)) {
-            sendDamageMessage(player, tool, damage, blocks.size)
             player.onBreakItemInMainHand()
         } else {
-            sendDamageMessage(player, tool, damage, blocks.size)
             tool.damage(damage)
         }
+
+        sendBlockBreakMessage(player, durability, damage, blocks.size)
     }
 
     private fun isValid(event: BlockBreakEvent): Boolean = when {
@@ -82,11 +82,10 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     private fun isReduce(tool: ItemStack): Boolean =
             Random().nextInt(tool.getEnchantmentLevel(Enchantment.DURABILITY)) == 0
 
-    private fun sendDamageMessage(player: Player, tool: ItemStack, damage: Int, blocksNum: Int) {
+    private fun sendBlockBreakMessage(player: Player, durability: Int, damage: Int, blocksNum: Int) {
         if (configs.onBlockBreakMessage) {
-            val oldDurability = tool.getRemainingDurability()
-            val newDurability = if (oldDurability - damage >= 0) oldDurability - damage else 0
-            player.sendMessage("耐久値: $oldDurability -> $newDurability, ブロック数: $blocksNum")
+            val newDurability = if (durability - damage >= 0) durability - damage else 0
+            player.sendMessage("耐久値: $durability -> $newDurability, ブロック数: $blocksNum")
         }
     }
 
