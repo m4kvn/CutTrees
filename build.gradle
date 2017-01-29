@@ -38,6 +38,8 @@ configurations {
 dependencies {
     compile 'org.spigotmc:spigot-api:1.10.2-R0.1-SNAPSHOT'
     embed "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.h2database:h2:1.4.191'
+    embed 'com.h2database:h2:1.4.191'
 }
 
 sourceSets {
