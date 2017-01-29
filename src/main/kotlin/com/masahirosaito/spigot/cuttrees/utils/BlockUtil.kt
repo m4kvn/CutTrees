@@ -1,6 +1,7 @@
 package com.masahirosaito.spigot.cuttrees.utils
 
 import org.bukkit.block.Block
+import org.bukkit.material.Leaves
 import org.bukkit.material.Tree
 
 fun Block.getRelatives(range: Int): List<Block> =
@@ -13,4 +14,8 @@ fun Block.getRelatives(range: Int): List<Block> =
 
 fun Block.isTree(): Boolean = state.data is Tree
 
-fun Block.asTree(): Tree = (state.data) as Tree
+fun Block.asTree(): Tree = state.data as Tree
+
+fun Block.isLeaves(): Boolean = state.data is Leaves
+
+fun Block.asLeaves(): Leaves = state.data as Leaves
