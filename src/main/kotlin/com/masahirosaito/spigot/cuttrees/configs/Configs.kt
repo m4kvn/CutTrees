@@ -22,7 +22,10 @@ data class Configs(
         val maxBlockAmount: Int = 200,
 
         @SerializedName("破壊する隣接ブロックの距離")
-        val rangeBreakBlock: Int = 1
+        val rangeBreakBlock: Int = 2,
+
+        @SerializedName("破壊する隣接葉ブロックの距離")
+        val rangeDecayLeaves: Int = 2
 
 ) {
     companion object {

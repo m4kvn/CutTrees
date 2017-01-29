@@ -20,7 +20,7 @@ class ReduceTreeBreakEvent(event: BlockBreakEvent, plugin: CutTrees) : TreeBreak
 
     fun takeBlocks() {
         if (tool.isBreak(damage)) {
-            blocks = blocks.take(tool.getRemainingDurability())
+            blocks = blocks.take(tool.getRemainingDurability()).toMutableSet()
         }
     }
 

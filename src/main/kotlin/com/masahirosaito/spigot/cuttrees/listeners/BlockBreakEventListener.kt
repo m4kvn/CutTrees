@@ -1,6 +1,7 @@
 package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
+import com.masahirosaito.spigot.cuttrees.events.TreeLeavesDecayEvent
 import com.masahirosaito.spigot.cuttrees.events.NoReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.TreeBreakMessageEvent
@@ -26,6 +27,8 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         }
 
         if (breakEvent.isCancelled) return
+
+        TreeLeavesDecayEvent(breakEvent).call(plugin)
 
         TreeBreakMessageEvent(breakEvent).call(plugin)
     }

@@ -13,8 +13,9 @@ abstract class TreeBreakEvent(event: BlockBreakEvent, plugin: CutTrees) : BaseCa
     val tool = player.itemInMainHand()
     val durability = tool.getRemainingDurability()
     var damage = blocks.size
+    val species = event.block.asTree().species!!
 
-    private fun calcBreakBLocks(block: Block): List<Block> {
+    private fun calcBreakBLocks(block: Block): MutableSet<Block> {
         val unCheckedBlocks = mutableSetOf(block)
         val checkedBlocks = mutableSetOf<Block>()
 
@@ -29,7 +30,7 @@ abstract class TreeBreakEvent(event: BlockBreakEvent, plugin: CutTrees) : BaseCa
                     .filterNot { checkedBlocks.contains(it) }
             )
         }
-        return checkedBlocks.toList()
+        return checkedBlocks
     }
 
     fun breakBlocks() = blocks.forEach { it.breakNaturally(tool) }
