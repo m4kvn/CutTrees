@@ -1,9 +1,13 @@
 package com.masahirosaito.spigot.cuttrees
 
 import com.masahirosaito.spigot.cuttrees.configs.Configs
+import com.masahirosaito.spigot.cuttrees.database.BlockObject
 import com.masahirosaito.spigot.cuttrees.listeners.*
-import com.masahirosaito.spigot.cuttrees.utils.register
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils.createMissingTablesAndColumns
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 
 class CutTrees : JavaPlugin() {
@@ -12,10 +16,23 @@ class CutTrees : JavaPlugin() {
     override fun onEnable() {
         configs = Configs.load(File(dataFolder, "config.json"))
 
-        BlockBreakEventListener(this).register(this)
-        NoReduceTreeBreakEventListener().register(this)
-        ReduceTreeBreakEventListener().register(this)
-        TreeLeavesDecayEventListener().register(this)
-        TreeBreakMessageEventListener().register(this)
+        listenerRegister(
+                BlockBreakEventListener(this),
+                NoReduceTreeBreakEventListener(),
+                ReduceTreeBreakEventListener(),
+                TreeLeavesDecayEventListener(),
+                TreeBreakMessageEventListener(),
+                BlockPlaceEventListener()
+        )
+
+        Database.connect("jdbc:h2:./${dataFolder.path}/playertrees", driver = "org.h2.Driver")
+
+        transaction {
+            createMissingTablesAndColumns(BlockObject)
+        }
+    }
+
+    private fun listenerRegister(vararg listeners: Listener) {
+        listeners.forEach { server.pluginManager.registerEvents(it, this) }
     }
 }
