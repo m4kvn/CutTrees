@@ -7,5 +7,5 @@ object BlockObject : Table() {
     val x = integer("x")
     val y = integer("y")
     val z = integer("z")
-    val chunkId = integer("chunk_id").references(ChunkObject.id)
+    val worldUid = uuid("world_uuid")
 }
