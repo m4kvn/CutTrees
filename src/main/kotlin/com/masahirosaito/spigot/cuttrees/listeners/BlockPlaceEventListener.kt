@@ -1,11 +1,11 @@
 package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.database.BlockObject
+import com.masahirosaito.spigot.cuttrees.utils.isTree
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.material.Tree
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -16,7 +16,7 @@ class BlockPlaceEventListener : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBLockPlace(event: BlockPlaceEvent) {
         if (event.isCancelled) return
-        if (event.block.state.data !is Tree) return
+        if (!event.block.isTree()) return
 
         val block = event.block
 

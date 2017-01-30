@@ -2,7 +2,6 @@ package com.masahirosaito.spigot.cuttrees
 
 import com.masahirosaito.spigot.cuttrees.configs.Configs
 import com.masahirosaito.spigot.cuttrees.database.BlockObject
-import com.masahirosaito.spigot.cuttrees.database.ChunkObject
 import com.masahirosaito.spigot.cuttrees.listeners.*
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
@@ -29,7 +28,7 @@ class CutTrees : JavaPlugin() {
         Database.connect("jdbc:h2:./${dataFolder.path}/playertrees", driver = "org.h2.Driver")
 
         transaction {
-            createMissingTablesAndColumns(ChunkObject, BlockObject)
+            createMissingTablesAndColumns(BlockObject)
         }
     }
 
