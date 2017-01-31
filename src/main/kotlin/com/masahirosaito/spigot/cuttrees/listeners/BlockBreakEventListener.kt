@@ -25,6 +25,7 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
         if (event.isCancelled) return
+        if (!event.player.isSneaking) return
         if (!configs.isValid(event.block)) return
         if (exists(event.block)) return
         if (!configs.isValid(event.player.itemInMainHand())) return
