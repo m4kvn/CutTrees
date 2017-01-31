@@ -10,10 +10,12 @@ import java.io.File
 class CutTrees : JavaPlugin() {
     lateinit var configs: Configs
     lateinit var antiBlockManager: AntiBlockManager
+    lateinit var messenger: Messenger
 
     override fun onEnable() {
         configs = Configs.load(File(dataFolder, "config.json"))
         antiBlockManager = AntiBlockManager(this)
+        messenger = Messenger(this)
 
         listenerRegister(
                 BlockBreakEventListener(this),
@@ -21,7 +23,8 @@ class CutTrees : JavaPlugin() {
                 NoReduceTreeBreakEventListener(),
                 ReduceTreeBreakEventListener(),
                 TreeLeavesDecayEventListener(),
-                TreeBreakMessageEventListener()
+                TreeBreakMessageEventListener(),
+                PlayerStatisticsEventListener(this)
         )
     }
 

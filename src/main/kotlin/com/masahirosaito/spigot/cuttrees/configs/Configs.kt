@@ -3,6 +3,7 @@ package com.masahirosaito.spigot.cuttrees.configs
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
+import com.masahirosaito.spigot.cuttrees.events.PlayerStatisticsEvent
 import com.masahirosaito.spigot.cuttrees.utils.isTree
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -12,6 +13,9 @@ import org.bukkit.material.Tree
 import java.io.File
 
 data class Configs(
+
+        @SerializedName("コンソールにデバッグメッセージを表示する")
+        val onDebug: Boolean = false,
 
         @SerializedName("クリエイティブモード時に道具の耐久値を減らす")
         val onCreativeDurabilityReduce: Boolean = false,
@@ -29,7 +33,13 @@ data class Configs(
         val rangeDecayLeaves: Int = 2,
 
         @SerializedName("スネーキング状態の時に木をきる")
-        val onSneaking: Boolean = true
+        val onSneaking: Boolean = true,
+
+        @SerializedName("統計を増やす")
+        val incrementStatistics: Boolean = true,
+
+        @SerializedName("クリエイティブモード時に統計を増やす")
+        val incrementStatisticsCreative: Boolean = false
 
 ) {
     companion object {
@@ -69,6 +79,7 @@ data class Configs(
         onSneaking -> player.isSneaking
         else -> false
     }
+
 
     fun isNotMax(blocks: Collection<Block>): Boolean = blocks.size < maxBlockAmount
 }

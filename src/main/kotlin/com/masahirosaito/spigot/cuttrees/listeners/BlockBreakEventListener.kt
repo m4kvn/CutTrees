@@ -1,29 +1,26 @@
 package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
-import com.masahirosaito.spigot.cuttrees.events.NoReduceTreeBreakEvent
-import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
-import com.masahirosaito.spigot.cuttrees.events.TreeBreakMessageEvent
-import com.masahirosaito.spigot.cuttrees.events.TreeLeavesDecayEvent
+import com.masahirosaito.spigot.cuttrees.events.*
 import com.masahirosaito.spigot.cuttrees.utils.call
 import com.masahirosaito.spigot.cuttrees.utils.isCreativeMode
 import com.masahirosaito.spigot.cuttrees.utils.itemInMainHand
 import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 
-class BlockBreakEventListener(val plugin: CutTrees) : Listener {
-    val configs = plugin.configs
+class BlockBreakEventListener(plugin: CutTrees) : CutTreesListener(plugin) {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
-        if (event.isCancelled) return
-        if (!configs.isValid(event.block)) return
-        if (isAnti(event.block)) return
-        if (!configs.isValid(event.player.itemInMainHand())) return
-        if (!configs.isValid(event.player)) return
+        when {
+            event.isCancelled -> return
+            !configs.isValid(event.block) -> return
+            isAnti(event.block) -> return
+            !configs.isValid(event.player.itemInMainHand()) -> return
+            !configs.isValid(event.player) -> return
+        }
 
         val breakEvent = if (isNotReduceDurability(event)) {
             NoReduceTreeBreakEvent(event, plugin).call(plugin)
@@ -36,6 +33,8 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         TreeLeavesDecayEvent(breakEvent).call(plugin)
 
         TreeBreakMessageEvent(breakEvent).call(plugin)
+
+        PlayerStatisticsEvent(breakEvent).call(plugin)
     }
 
     private fun isNotReduceDurability(event: BlockBreakEvent): Boolean = when {
@@ -45,8 +44,8 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     }
 
     private fun isAnti(block: Block): Boolean {
-        if (plugin.antiBlockManager.isAnti(block)) {
-            plugin.antiBlockManager.remove(block)
+        if (antiBlockManager.isAnti(block)) {
+            antiBlockManager.remove(block)
             return true
         }
 

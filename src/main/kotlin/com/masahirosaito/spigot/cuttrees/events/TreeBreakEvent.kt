@@ -14,6 +14,7 @@ abstract class TreeBreakEvent(event: BlockBreakEvent, val plugin: CutTrees) : Ba
     val durability = tool.getRemainingDurability()
     var damage = blocks.size
     val species = event.block.asTree().species!!
+    val blockType = event.block.type!!
 
     private fun calcBreakBLocks(block: Block): MutableSet<Block> {
         val unCheckedBlocks = mutableSetOf(block)
