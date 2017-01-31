@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 import com.masahirosaito.spigot.cuttrees.utils.isTree
 import org.bukkit.Material
 import org.bukkit.block.Block
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.material.Tree
 import java.io.File
@@ -25,7 +26,10 @@ data class Configs(
         val rangeBreakBlock: Int = 2,
 
         @SerializedName("破壊する隣接葉ブロックの距離")
-        val rangeDecayLeaves: Int = 2
+        val rangeDecayLeaves: Int = 2,
+
+        @SerializedName("スネーキング状態の時に木をきる")
+        val onSneaking: Boolean = true
 
 ) {
     companion object {
@@ -58,6 +62,11 @@ data class Configs(
         Material.STONE_AXE,
         Material.GOLD_AXE,
         Material.IRON_AXE -> true
+        else -> false
+    }
+
+    fun isValid(player: Player): Boolean = when {
+        onSneaking -> player.isSneaking
         else -> false
     }
 

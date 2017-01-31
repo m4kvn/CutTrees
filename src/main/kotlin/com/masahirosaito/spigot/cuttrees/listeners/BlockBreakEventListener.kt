@@ -1,7 +1,6 @@
 package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
-import com.masahirosaito.spigot.cuttrees.database.BlockObject
 import com.masahirosaito.spigot.cuttrees.events.NoReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.TreeBreakMessageEvent
@@ -14,10 +13,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.transaction
 
 class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     val configs = plugin.configs
@@ -26,8 +21,9 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     fun onBlockBreak(event: BlockBreakEvent) {
         if (event.isCancelled) return
         if (!configs.isValid(event.block)) return
-        if (exists(event.block)) return
+        if (isAnti(event.block)) return
         if (!configs.isValid(event.player.itemInMainHand())) return
+        if (!configs.isValid(event.player)) return
 
         val breakEvent = if (isNotReduceDurability(event)) {
             NoReduceTreeBreakEvent(event, plugin).call(plugin)
@@ -48,25 +44,12 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         else -> false
     }
 
-    private fun exists(block: Block): Boolean {
-        var exists: Boolean = true
-        var selectId: Int
-
-        transaction {
-            val selectBlocks = BlockObject.select {
-                ((BlockObject.worldUid eq block.world.uid)
-                        and (BlockObject.x eq block.x)
-                        and (BlockObject.y eq block.y)
-                        and (BlockObject.z eq block.z))
-            }
-            exists = !selectBlocks.none()
-
-            if (exists) {
-                selectId = selectBlocks.first()[BlockObject.id]
-                BlockObject.deleteWhere { BlockObject.id eq selectId }
-            }
+    private fun isAnti(block: Block): Boolean {
+        if (plugin.antiBlockManager.isAnti(block)) {
+            plugin.antiBlockManager.remove(block)
+            return true
         }
 
-        return exists
+        return false
     }
 }
