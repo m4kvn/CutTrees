@@ -23,7 +23,7 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         if (!configs.isValid(event.block)) return
         if (isAnti(event.block)) return
         if (!configs.isValid(event.player.itemInMainHand())) return
-        if (!event.player.isSneaking) return
+        if (!configs.isValid(event.player)) return
 
         val breakEvent = if (isNotReduceDurability(event)) {
             NoReduceTreeBreakEvent(event, plugin).call(plugin)
