@@ -29,7 +29,8 @@ abstract class RelativeBlocksCalculator(plugin: CutTrees) : CutTreesAbstract(plu
         return mutableSetOf<Block>().apply {
             blocks.forEach { block ->
                 addAll(block.getRelatives(configs.rangeDecayLeaves)
-                        .filter { relativeLeavesFilter(block, it) })
+                        .filter { relativeLeavesFilter(block, it) }
+                        .filter { configs.isNotAnti(it, plugin) })
             }
         }
     }
