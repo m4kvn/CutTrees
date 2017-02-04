@@ -19,6 +19,7 @@ class AntiBlockManager(val plugin: CutTrees) {
                 antiBlocks.add(getBlock(it))
             }
         }
+        sendLog("Load")
     }
 
     private fun getBlock(result: ResultRow): Block {
@@ -43,6 +44,7 @@ class AntiBlockManager(val plugin: CutTrees) {
                 }
             }
         }
+        sendLog("Save")
     }
 
     fun add(block: Block) {
@@ -63,6 +65,14 @@ class AntiBlockManager(val plugin: CutTrees) {
         plugin.messenger.debug(buildString {
             append("${ChatColor.GOLD}")
             append("[$action AntiBlock] $block")
+            append("${ChatColor.RESET}")
+        })
+    }
+
+    private fun sendLog(action: String) {
+        plugin.messenger.log(buildString {
+            append("${ChatColor.GOLD}")
+            append("[$action AntiBlock]")
             append("${ChatColor.RESET}")
         })
     }
