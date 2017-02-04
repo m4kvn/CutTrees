@@ -3,7 +3,7 @@ package com.masahirosaito.spigot.cuttrees.configs
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
-import com.masahirosaito.spigot.cuttrees.events.PlayerStatisticsEvent
+import com.masahirosaito.spigot.cuttrees.exceptions.NotFoundMaterialException
 import com.masahirosaito.spigot.cuttrees.utils.isTree
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -39,7 +39,10 @@ data class Configs(
         val incrementStatistics: Boolean = true,
 
         @SerializedName("クリエイティブモード時に統計を増やす")
-        val incrementStatisticsCreative: Boolean = false
+        val incrementStatisticsCreative: Boolean = false,
+
+        @SerializedName("破壊できるブロックの種類(ブロック名, 葉ブロック名)")
+        val anotherBlockTypeNames: Map<String, String> = mapOf()
 
 ) {
     companion object {
@@ -50,19 +53,26 @@ data class Configs(
                 file.parentFile.mkdirs()
             }
 
-            if (!file.exists()) return Configs().apply {
+            var configs: Configs
+
+            if (!file.exists()) {
+                configs = Configs()
                 file.createNewFile()
-                file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(this))
+            } else {
+                configs = Gson().fromJson(file.readText(), Configs::class.java)
             }
 
-            return Gson().fromJson(file.readText(), Configs::class.java).apply {
-                file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(this))
-            }
+            file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(configs))
+
+            configs.loadAnotherBlockTypes()
+
+            return configs
         }
     }
 
     fun isValid(block: Block): Boolean = when {
         block.isTree() -> true
+        isAnotherBlock(block) -> true
         else -> false
     }
 
@@ -76,10 +86,32 @@ data class Configs(
     }
 
     fun isValid(player: Player): Boolean = when {
-        onSneaking -> player.isSneaking
-        else -> false
+        onSneaking && !player.isSneaking-> false
+        else -> true
     }
 
-
     fun isNotMax(blocks: Collection<Block>): Boolean = blocks.size < maxBlockAmount
+
+    private fun getMaterial(name: String): Material {
+        return Material.getMaterial(name) ?: throw NotFoundMaterialException(name)
+    }
+
+    private fun loadAnotherBlockTypes() {
+        anotherBlockTypeNames.forEach { pair ->
+            try {
+                getMaterial(pair.key)
+            } catch(e: Exception) {
+                e.printStackTrace()
+            }
+            try {
+                if (!pair.value.isNullOrBlank()) {
+                    getMaterial(pair.value)
+                }
+            } catch(e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun isAnotherBlock(block: Block): Boolean = anotherBlockTypeNames.containsKey(block.type.name)
 }

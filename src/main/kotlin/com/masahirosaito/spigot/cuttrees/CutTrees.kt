@@ -20,11 +20,8 @@ class CutTrees : JavaPlugin() {
         listenerRegister(
                 BlockBreakEventListener(this),
                 BlockPlaceEventListener(this),
-                NoReduceTreeBreakEventListener(),
-                ReduceTreeBreakEventListener(),
-                TreeLeavesDecayEventListener(),
-                TreeBreakMessageEventListener(),
-                PlayerStatisticsEventListener(this)
+                NoReduceTreeBreakEventListener(this),
+                ReduceTreeBreakEventListener(this)
         )
     }
 
