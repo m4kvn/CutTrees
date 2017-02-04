@@ -23,6 +23,9 @@ class CutTrees : JavaPlugin() {
                 NoReduceTreeBreakEventListener(this),
                 ReduceTreeBreakEventListener(this)
         )
+
+        messenger.debug("Blocks: ${configs.anotherBlockTypeNames}")
+        messenger.debug("Tools: ${configs.toolTypeNames}")
     }
 
     override fun onDisable() {
