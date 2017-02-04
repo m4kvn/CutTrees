@@ -21,12 +21,13 @@ class AntiBlockManager(val plugin: CutTrees) {
         }
     }
 
-    private fun getBlock(result: ResultRow): Block =
-            plugin.server.getWorld(result[BlockObject.worldUid]).getBlockAt(
-                    result[BlockObject.x],
-                    result[BlockObject.y],
-                    result[BlockObject.z]
-            )
+    private fun getBlock(result: ResultRow): Block {
+        return plugin.server.getWorld(result[BlockObject.worldUid]).getBlockAt(
+                result[BlockObject.x],
+                result[BlockObject.y],
+                result[BlockObject.z]
+        )
+    }
 
     fun save() {
         transaction {
@@ -46,23 +47,23 @@ class AntiBlockManager(val plugin: CutTrees) {
 
     fun add(block: Block) {
         antiBlocks.add(block)
-        plugin.messenger.debug(buildString {
-            append("${ChatColor.GOLD}")
-            append("[Add AntiBlock] $block")
-            append("${ChatColor.RESET}")
-        })
+        sendDebug(block, "Add")
     }
 
     fun remove(block: Block) {
         antiBlocks.remove(block)
-        plugin.messenger.debug(buildString {
-            append("${ChatColor.GOLD}")
-            append("[Remove AntiBlock] $block")
-            append("${ChatColor.RESET}")
-        })
+        sendDebug(block, "Remove")
     }
 
     fun isAnti(block: Block): Boolean {
         return antiBlocks.contains(block)
+    }
+
+    private fun sendDebug(block: Block, action: String) {
+        plugin.messenger.debug(buildString {
+            append("${ChatColor.GOLD}")
+            append("[$action AntiBlock] $block")
+            append("${ChatColor.RESET}")
+        })
     }
 }
