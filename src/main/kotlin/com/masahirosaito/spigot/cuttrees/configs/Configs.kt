@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.exceptions.NotFoundMaterialException
+import com.masahirosaito.spigot.cuttrees.utils.isMushroom
 import com.masahirosaito.spigot.cuttrees.utils.isTree
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -76,6 +77,7 @@ data class Configs(
 
     fun isValid(block: Block): Boolean = when {
         block.isTree() -> true
+        block.isMushroom() -> true
         isAnotherBlock(block) -> true
         else -> false
     }
