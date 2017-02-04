@@ -18,7 +18,7 @@ abstract class RelativeBlocksCalculator(plugin: CutTrees) : CutTreesAbstract(plu
             }
             unCheckedBlocks.addAll(b.getRelatives(configs.rangeBreakBlock)
                     .filter { relativeBlocksFilter(block, it) }
-                    .filterNot { antiBlockManager.isAnti(it) }
+                    .filter { configs.isNotAnti(it, plugin) }
                     .filterNot { checkedBlocks.contains(it) }
             )
         }

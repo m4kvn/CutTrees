@@ -3,6 +3,7 @@ package com.masahirosaito.spigot.cuttrees.configs
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
+import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.exceptions.NotFoundMaterialException
 import com.masahirosaito.spigot.cuttrees.utils.isTree
 import org.bukkit.Material
@@ -40,6 +41,9 @@ data class Configs(
 
         @SerializedName("クリエイティブモード時に統計を増やす")
         val incrementStatisticsCreative: Boolean = false,
+
+        @SerializedName("プレイヤーが設置したブロックを破壊しない")
+        val onAntiBLock: Boolean = true,
 
         @SerializedName("破壊できるブロックの種類(ブロック名, 葉ブロック名)")
         val anotherBlockTypeNames: Map<String, String> = mapOf()
@@ -91,6 +95,10 @@ data class Configs(
     }
 
     fun isNotMax(blocks: Collection<Block>): Boolean = blocks.size < maxBlockAmount
+
+    fun isNotAnti(block:Block, plugin: CutTrees): Boolean {
+        return if(onAntiBLock) !plugin.antiBlockManager.isAnti(block) else true
+    }
 
     private fun getMaterial(name: String): Material {
         return Material.getMaterial(name) ?: throw NotFoundMaterialException(name)

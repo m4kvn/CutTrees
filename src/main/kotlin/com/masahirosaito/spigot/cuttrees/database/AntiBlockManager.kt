@@ -1,11 +1,12 @@
 package com.masahirosaito.spigot.cuttrees.database
 
+import com.masahirosaito.spigot.cuttrees.CutTrees
+import org.bukkit.ChatColor
 import org.bukkit.block.Block
-import org.bukkit.plugin.java.JavaPlugin
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class AntiBlockManager(val plugin: JavaPlugin) {
+class AntiBlockManager(val plugin: CutTrees) {
     val antiBlocks = mutableSetOf<Block>()
 
     init {
@@ -45,11 +46,23 @@ class AntiBlockManager(val plugin: JavaPlugin) {
 
     fun add(block: Block) {
         antiBlocks.add(block)
+        plugin.messenger.debug(buildString {
+            append("${ChatColor.GOLD}")
+            append("[Add AntiBlock] $block")
+            append("${ChatColor.RESET}")
+        })
     }
 
     fun remove(block: Block) {
         antiBlocks.remove(block)
+        plugin.messenger.debug(buildString {
+            append("${ChatColor.GOLD}")
+            append("[Remove AntiBlock] $block")
+            append("${ChatColor.RESET}")
+        })
     }
 
-    fun isAnti(block: Block): Boolean = antiBlocks.contains(block)
+    fun isAnti(block: Block): Boolean {
+        return antiBlocks.contains(block)
+    }
 }
