@@ -14,8 +14,8 @@ class CutTrees : JavaPlugin() {
 
     override fun onEnable() {
         configs = Configs.load(File(dataFolder, "config.json"))
-        antiBlockManager = AntiBlockManager(this)
         messenger = Messenger(this)
+        antiBlockManager = AntiBlockManager(this)
 
         listenerRegister(
                 BlockBreakEventListener(this),

@@ -16,21 +16,29 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
-        when {
-            event.isCancelled -> return
-            !configs.isValid(event.block) -> return
-            !configs.isNotAnti(event.block, plugin) -> return antiBlockManager.remove(event.block)
-            !configs.isValid(event.player.itemInMainHand()) -> return
-            !configs.isValid(event.player) -> return
-        }
+        if (event.isCancelled) return
+        if (isInValid(event)) return antiBlockManager.remove(event.block)
 
-        if (isNotReduceDurability(event)) NoReduceTreeBreakEvent(event, plugin).call(plugin)
-        else ReduceTreeBreakEvent(event, plugin).call(plugin)
+        if (isNotReduceDurability(event)) {
+            NoReduceTreeBreakEvent(event, plugin).call(plugin)
+        } else {
+            ReduceTreeBreakEvent(event, plugin).call(plugin)
+        }
     }
 
     private fun isNotReduceDurability(event: BlockBreakEvent): Boolean = when {
         (event.player.isCreativeMode() && !configs.onCreativeDurabilityReduce) -> true
         (event.player.itemInMainHand().itemMeta.spigot().isUnbreakable) -> true
         else -> false
+    }
+
+    private fun isInValid(event: BlockBreakEvent): Boolean {
+        return when {
+            !configs.isValid(event.block) -> true
+            !configs.isNotAnti(event.block, plugin) -> true
+            !configs.isValid(event.player.itemInMainHand()) -> true
+            !configs.isValid(event.player) -> true
+            else -> false
+        }
     }
 }
