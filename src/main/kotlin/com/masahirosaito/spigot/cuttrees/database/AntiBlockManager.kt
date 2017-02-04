@@ -1,11 +1,12 @@
 package com.masahirosaito.spigot.cuttrees.database
 
+import com.masahirosaito.spigot.cuttrees.CutTrees
+import org.bukkit.ChatColor
 import org.bukkit.block.Block
-import org.bukkit.plugin.java.JavaPlugin
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class AntiBlockManager(val plugin: JavaPlugin) {
+class AntiBlockManager(val plugin: CutTrees) {
     val antiBlocks = mutableSetOf<Block>()
 
     init {
@@ -18,14 +19,16 @@ class AntiBlockManager(val plugin: JavaPlugin) {
                 antiBlocks.add(getBlock(it))
             }
         }
+        sendLog("Load")
     }
 
-    private fun getBlock(result: ResultRow): Block =
-            plugin.server.getWorld(result[BlockObject.worldUid]).getBlockAt(
-                    result[BlockObject.x],
-                    result[BlockObject.y],
-                    result[BlockObject.z]
-            )
+    private fun getBlock(result: ResultRow): Block {
+        return plugin.server.getWorld(result[BlockObject.worldUid]).getBlockAt(
+                result[BlockObject.x],
+                result[BlockObject.y],
+                result[BlockObject.z]
+        )
+    }
 
     fun save() {
         transaction {
@@ -41,15 +44,38 @@ class AntiBlockManager(val plugin: JavaPlugin) {
                 }
             }
         }
+        sendLog("Save")
     }
 
     fun add(block: Block) {
-        antiBlocks.add(block)
+        if (antiBlocks.add(block)) {
+            sendDebug(block, "Add")
+        }
     }
 
     fun remove(block: Block) {
-        antiBlocks.remove(block)
+        if (antiBlocks.remove(block)) {
+            sendDebug(block, "Remove")
+        }
     }
 
-    fun isAnti(block: Block): Boolean = antiBlocks.contains(block)
+    fun isAnti(block: Block): Boolean {
+        return antiBlocks.contains(block)
+    }
+
+    private fun sendDebug(block: Block, action: String) {
+        plugin.messenger.debug(buildString {
+            append("${ChatColor.GOLD}")
+            append("[$action AntiBlock] $block")
+            append("${ChatColor.RESET}")
+        })
+    }
+
+    private fun sendLog(action: String) {
+        plugin.messenger.log(buildString {
+            append("${ChatColor.GOLD}")
+            append("[$action AntiBlock] complete")
+            append("${ChatColor.RESET}")
+        })
+    }
 }

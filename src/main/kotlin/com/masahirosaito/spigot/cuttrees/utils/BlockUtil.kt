@@ -19,3 +19,5 @@ fun Block.asTree(): Tree = state.data as Tree
 fun Block.isLeaves(): Boolean = state.data is Leaves
 
 fun Block.asLeaves(): Leaves = state.data as Leaves
+
+fun Block.sameType(block: Block): Boolean = type == block.type
