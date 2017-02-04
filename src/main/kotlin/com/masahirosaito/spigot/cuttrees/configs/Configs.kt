@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import com.masahirosaito.spigot.cuttrees.CutTrees
+import com.masahirosaito.spigot.cuttrees.exceptions.InvalidToolTypeException
 import com.masahirosaito.spigot.cuttrees.exceptions.NotFoundMaterialException
 import com.masahirosaito.spigot.cuttrees.utils.isMushroom
 import com.masahirosaito.spigot.cuttrees.utils.isTree
@@ -46,8 +47,17 @@ data class Configs(
         @SerializedName("プレイヤーが設置したブロックを破壊しない")
         val onAntiBLock: Boolean = true,
 
+        @SerializedName("発動させるツールの種類")
+        var toolTypeNames: List<String> = listOf(
+                Material.DIAMOND_AXE.name,
+                Material.IRON_AXE.name,
+                Material.GOLD_AXE.name,
+                Material.STONE_AXE.name,
+                Material.WOOD_AXE.name
+        ),
+
         @SerializedName("破壊できるブロックの種類(ブロック名, 葉ブロック名)")
-        val anotherBlockTypeNames: Map<String, String> = mapOf()
+        var anotherBlockTypeNames: Map<String, String> = mapOf()
 
 ) {
     companion object {
@@ -71,6 +81,8 @@ data class Configs(
 
             configs.loadAnotherBlockTypes()
 
+            configs.loadToolTypes()
+
             return configs
         }
     }
@@ -82,13 +94,8 @@ data class Configs(
         else -> false
     }
 
-    fun isValid(tool: ItemStack): Boolean = when (tool.type) {
-        Material.DIAMOND_AXE,
-        Material.WOOD_AXE,
-        Material.STONE_AXE,
-        Material.GOLD_AXE,
-        Material.IRON_AXE -> true
-        else -> false
+    fun isValid(tool: ItemStack): Boolean {
+        return toolTypeNames.contains(tool.type.name)
     }
 
     fun isValid(player: Player): Boolean = when {
@@ -107,18 +114,38 @@ data class Configs(
     }
 
     private fun loadAnotherBlockTypes() {
-        anotherBlockTypeNames.forEach { pair ->
-            try {
-                getMaterial(pair.key)
-            } catch(e: Exception) {
-                e.printStackTrace()
-            }
-            try {
-                if (!pair.value.isNullOrBlank()) {
-                    getMaterial(pair.value)
+        anotherBlockTypeNames = mutableMapOf<String, String>().apply {
+            anotherBlockTypeNames.forEach { pair ->
+                try {
+                    getMaterial(pair.key)
+
+                    if (!pair.value.isNullOrBlank()) {
+                        try {
+                            getMaterial(pair.value)
+                            put(pair.key, pair.value)
+                        } catch(e: Exception) {
+                            e.printStackTrace()
+                            put(pair.key, "")
+                        }
+                    } else {
+                        put(pair.key, pair.value)
+                    }
+                } catch(e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch(e: Exception) {
-                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun loadToolTypes() {
+        toolTypeNames = mutableListOf<String>().apply {
+            toolTypeNames.forEach {
+                try {
+                    if (getMaterial(it).maxDurability > 0) add(it)
+                    else throw InvalidToolTypeException()
+                } catch(e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
