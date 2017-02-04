@@ -3,8 +3,10 @@ package com.masahirosaito.spigot.cuttrees.events
 import com.masahirosaito.spigot.cuttrees.BaseCancellableEvent
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.calculators.AnotherBlockCalculator
+import com.masahirosaito.spigot.cuttrees.calculators.MushroomCalculator
 import com.masahirosaito.spigot.cuttrees.calculators.RelativeBlocksCalculator
 import com.masahirosaito.spigot.cuttrees.calculators.TreeCalculator
+import com.masahirosaito.spigot.cuttrees.utils.isMushroom
 import com.masahirosaito.spigot.cuttrees.utils.isTree
 import com.masahirosaito.spigot.cuttrees.utils.itemInMainHand
 import org.bukkit.block.Block
@@ -18,6 +20,7 @@ abstract class TreeBreakEvent(event: BlockBreakEvent, val plugin: CutTrees) : Ba
 
     private fun getCalculator(block: Block): RelativeBlocksCalculator = when {
         block.isTree() -> TreeCalculator(plugin)
+        block.isMushroom() -> MushroomCalculator(plugin)
         else -> AnotherBlockCalculator(plugin)
     }
 }
