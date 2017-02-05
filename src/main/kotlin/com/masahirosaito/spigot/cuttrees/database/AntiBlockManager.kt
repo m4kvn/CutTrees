@@ -2,6 +2,7 @@ package com.masahirosaito.spigot.cuttrees.database
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.block.Block
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -32,6 +33,10 @@ class AntiBlockManager(val plugin: CutTrees) {
 
     fun save() {
         transaction {
+            try {
+                BlockObject.deleteAll()
+            } catch(e: Exception) {
+            }
             antiBlocks.forEach { block ->
                 try {
                     BlockObject.insert {
