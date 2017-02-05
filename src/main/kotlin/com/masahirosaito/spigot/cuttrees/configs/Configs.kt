@@ -38,10 +38,25 @@ class Configs(loader: ConfigsLoader, val plugin: CutTrees) {
 
     fun isAnti(block: Block): Boolean = if (onAntiBLock) plugin.antiBlockManager.isAnti(block) else false
 
-    fun isAnotherBlock(block: Block): Boolean = anotherBlockTypeNames.containsKey(block.type)
+    fun isAnotherBlock(block: Block): Boolean = getDamagedBlock(block) != null
 
-    fun isSameAnotherLeaves(block: Block, leaves: Block): Boolean {
-        return if (!isAnotherBlock(block)) false else anotherBlockTypeNames[block.type] == leaves.type
+    fun isAnotherLeaves(block: Block, leaves: Block): Boolean = getDamagedLeaves(block, leaves) != null
+
+    fun getDamagedBlock(block: Block): DamagedBlock? {
+        anotherBlockTypeNames.forEach { pair ->
+            if (pair.key.isSameType(block)) {
+                if (pair.key.isSameDamage(block)) return pair.key
+            }
+        }
+        return null
     }
 
+    fun getDamagedLeaves(block: Block, leaves: Block): DamagedBlock? {
+        if (isAnotherBlock(block)) {
+            anotherBlockTypeNames[getDamagedBlock(block)].let {
+                if (it != null) if (it.isSameType(leaves)) if (it.isSameDamage(leaves)) return it
+            }
+        }
+        return null
+    }
 }

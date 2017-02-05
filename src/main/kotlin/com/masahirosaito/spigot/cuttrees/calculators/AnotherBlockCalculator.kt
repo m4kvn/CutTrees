@@ -11,6 +11,6 @@ class AnotherBlockCalculator(plugin: CutTrees) : RelativeBlocksCalculator(plugin
     }
 
     override fun relativeLeavesFilter(block: Block, relativeBlock: Block): Boolean {
-        return configs.isSameAnotherLeaves(block, relativeBlock)
+        return configs.isAnotherLeaves(block, relativeBlock)
     }
 }
