@@ -53,19 +53,19 @@ data class ConfigsLoader(
 ) {
     companion object {
 
-        fun load(file: File): Configs {
+        fun load(file: File): ConfigsLoader {
 
             if (!file.parentFile.exists()) {
                 file.parentFile.mkdirs()
             }
 
-            var configs: Configs
+            var configs: ConfigsLoader
 
             if (!file.exists()) {
-                configs = Configs()
+                configs = ConfigsLoader()
                 file.createNewFile()
             } else {
-                configs = Gson().fromJson(file.readText(), Configs::class.java)
+                configs = Gson().fromJson(file.readText(), ConfigsLoader::class.java)
             }
 
             file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(configs))
