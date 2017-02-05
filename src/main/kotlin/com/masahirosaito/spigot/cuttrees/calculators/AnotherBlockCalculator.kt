@@ -11,8 +11,6 @@ class AnotherBlockCalculator(plugin: CutTrees) : RelativeBlocksCalculator(plugin
     }
 
     override fun relativeLeavesFilter(block: Block, relativeBlock: Block): Boolean {
-        val typeName = configs.anotherBlockTypeNames[block.type.name]
-        if (typeName != null) return relativeBlock.type.name == typeName
-        else return false
+        return configs.isAnotherLeaves(block, relativeBlock)
     }
 }

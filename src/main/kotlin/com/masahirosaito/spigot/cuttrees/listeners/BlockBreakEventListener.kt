@@ -7,6 +7,7 @@ import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.utils.call
 import com.masahirosaito.spigot.cuttrees.utils.isCreativeMode
 import com.masahirosaito.spigot.cuttrees.utils.itemInMainHand
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -19,11 +20,21 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
         if (event.isCancelled) return
         if (isInValid(event)) return antiBlockManager.remove(event.block)
 
+        debugMsg(event)
+
         if (isNotReduceDurability(event)) {
             NoReduceTreeBreakEvent(event, plugin).call(plugin)
         } else {
             ReduceTreeBreakEvent(event, plugin).call(plugin)
         }
+    }
+
+    private fun debugMsg(event: BlockBreakEvent) {
+        messenger.debug(buildString {
+            append("${ChatColor.GOLD}")
+            append("[Valid Event] $event")
+            append("${ChatColor.RESET}")
+        })
     }
 
     private fun isNotReduceDurability(event: BlockBreakEvent): Boolean = when {
@@ -34,10 +45,10 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
 
     private fun isInValid(event: BlockBreakEvent): Boolean {
         return when {
-            !configs.isValid(event.block) -> true
-            !configs.isNotAnti(event.block, plugin) -> true
-            !configs.isValid(event.player.itemInMainHand()) -> true
-            !configs.isValid(event.player) -> true
+            !configs.isValidBlock(event.block) -> true.apply { messenger.debug("Block is InValid") }
+            !configs.isNotAnti(event.block) -> true.apply { messenger.debug("Block is AntiBlock") }
+            !configs.isValidTool(event.player.itemInMainHand()) -> true.apply { messenger.debug("Tool is InValid") }
+            !configs.isSneaking(event.player) -> true.apply { messenger.debug("Player is not Sneaking") }
             else -> false
         }
     }

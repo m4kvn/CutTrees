@@ -1,6 +1,7 @@
 package com.masahirosaito.spigot.cuttrees
 
 import com.masahirosaito.spigot.cuttrees.configs.Configs
+import com.masahirosaito.spigot.cuttrees.configs.ConfigsLoader
 import com.masahirosaito.spigot.cuttrees.database.AntiBlockManager
 import com.masahirosaito.spigot.cuttrees.listeners.*
 import org.bukkit.event.Listener
@@ -13,7 +14,7 @@ class CutTrees : JavaPlugin() {
     lateinit var messenger: Messenger
 
     override fun onEnable() {
-        configs = Configs.load(File(dataFolder, "config.json"))
+        configs = Configs(ConfigsLoader.load(File(dataFolder, "config.json")), this)
         messenger = Messenger(this)
         antiBlockManager = AntiBlockManager(this)
 
