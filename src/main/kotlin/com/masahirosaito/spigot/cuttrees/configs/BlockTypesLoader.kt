@@ -1,11 +1,9 @@
 package com.masahirosaito.spigot.cuttrees.configs
 
-import org.bukkit.Material
-
 class BlockTypesLoader(val blockTypeNames: Map<String, String>) {
 
-    fun load(): MutableMap<DamagebleBlock, DamagebleBlock?> {
-        return mutableMapOf<DamagebleBlock, DamagebleBlock?>().apply {
+    fun load(): MutableMap<DamagedBlock, DamagedBlock?> {
+        return mutableMapOf<DamagedBlock, DamagedBlock?>().apply {
             blockTypeNames.forEach { pair ->
                 try {
                     put(getBlock(pair.key), getLeaves(pair.value))
@@ -16,27 +14,16 @@ class BlockTypesLoader(val blockTypeNames: Map<String, String>) {
         }
     }
 
-    private fun getBlock(str: String): DamagebleBlock {
-        return DamagebleBlock(str)
+    private fun getBlock(str: String): DamagedBlock {
+        return DamagedBlock(str)
     }
 
-    private fun getLeaves(str: String): DamagebleBlock? {
+    private fun getLeaves(str: String): DamagedBlock? {
         try {
-            return if (str.isNullOrBlank()) null else DamagebleBlock(str)
+            return if (str.isNullOrBlank()) null else DamagedBlock(str)
         } catch(e: Exception) {
             e.printStackTrace()
             return null
-        }
-    }
-
-    class DamagebleBlock(str: String) {
-        val type = getBlockType(str)
-        val damage = getDamage(str)
-
-        private fun getBlockType(str: String): Material = MaterialGetter().get(str.split(":")[0])
-
-        private fun getDamage(str: String): Short {
-            return if (str.contains(":")) str.split(":")[1].toShort() else -1
         }
     }
 }
