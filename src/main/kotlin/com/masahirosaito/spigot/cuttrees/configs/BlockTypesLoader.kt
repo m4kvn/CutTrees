@@ -4,15 +4,11 @@ import org.bukkit.Material
 
 class BlockTypesLoader(val blockTypeNames: Map<String, String>) {
 
-    fun load(): MutableMap<Material, Material?> {
-        return mutableMapOf<Material, Material?>().apply { convert() }
-    }
-
-    private fun MutableMap<Material, Material?>.convert() {
-        MaterialGetter().apply {
+    fun load(): MutableMap<DamagebleBlock, DamagebleBlock?> {
+        return mutableMapOf<DamagebleBlock, DamagebleBlock?>().apply {
             blockTypeNames.forEach { pair ->
                 try {
-                    put(get(pair.key), material(pair))
+                    put(getBlock(pair.key), getLeaves(pair.value))
                 } catch(e: Exception) {
                     e.printStackTrace()
                 }
@@ -20,14 +16,27 @@ class BlockTypesLoader(val blockTypeNames: Map<String, String>) {
         }
     }
 
-    private fun MaterialGetter.material(pair: Map.Entry<String, String>): Material? {
-        return if (!pair.value.isNullOrBlank()) {
-            try {
-                get(pair.value)
-            } catch(e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        } else null
+    private fun getBlock(str: String): DamagebleBlock {
+        return DamagebleBlock(str)
+    }
+
+    private fun getLeaves(str: String): DamagebleBlock? {
+        try {
+            return if (str.isNullOrBlank()) null else DamagebleBlock(str)
+        } catch(e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
+    class DamagebleBlock(str: String) {
+        val type = getBlockType(str)
+        val damage = getDamage(str)
+
+        private fun getBlockType(str: String): Material = MaterialGetter().get(str.split(":")[0])
+
+        private fun getDamage(str: String): Short {
+            return if (str.contains(":")) str.split(":")[1].toShort() else -1
+        }
     }
 }
