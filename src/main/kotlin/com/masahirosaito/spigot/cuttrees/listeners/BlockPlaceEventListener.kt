@@ -13,7 +13,7 @@ class BlockPlaceEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
     fun onBLockPlace(event: BlockPlaceEvent) {
         when {
             event.isCancelled -> return
-            !configs.isValid(event.block) -> return
+            !configs.isValidBlock(event.block) -> return
         }
         antiBlockManager.add(event.block)
     }

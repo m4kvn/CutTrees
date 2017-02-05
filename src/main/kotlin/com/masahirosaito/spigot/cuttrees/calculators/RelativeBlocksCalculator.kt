@@ -18,7 +18,7 @@ abstract class RelativeBlocksCalculator(plugin: CutTrees) : CutTreesAbstract(plu
             }
             unCheckedBlocks.addAll(b.getRelatives(configs.rangeBreakBlock)
                     .filter { relativeBlocksFilter(block, it) }
-                    .filter { configs.isNotAnti(it, plugin) }
+                    .filter { configs.isNotAnti(it) }
                     .filterNot { checkedBlocks.contains(it) }
             )
         }
@@ -30,7 +30,7 @@ abstract class RelativeBlocksCalculator(plugin: CutTrees) : CutTreesAbstract(plu
             blocks.forEach { block ->
                 addAll(block.getRelatives(configs.rangeDecayLeaves)
                         .filter { relativeLeavesFilter(block, it) }
-                        .filter { configs.isNotAnti(it, plugin) })
+                        .filter { configs.isNotAnti(it) })
             }
         }
     }
