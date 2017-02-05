@@ -48,7 +48,10 @@ data class ConfigsLoader(
         ),
 
         @SerializedName("破壊できるブロックの種類(ブロック名, 葉ブロック名)")
-        var anotherBlockTypeNames: Map<String, String> = mapOf()
+        var anotherBlockTypeNames: Map<String, String> = mapOf(
+                "${Material.WOOL}:1" to "${Material.WOOL}:2",
+                "${Material.PUMPKIN}" to ""
+        )
 
 ) {
     companion object {
