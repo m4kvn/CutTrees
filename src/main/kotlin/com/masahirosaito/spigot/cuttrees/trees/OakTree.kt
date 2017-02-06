@@ -7,7 +7,6 @@ import org.bukkit.block.Block
 class OakTree(block: Block) : BaseTree(block) {
     val MAX_HEIGHT = 9
     val MIN_HEIGHT = 4
-    val SPECIES = TreeSpecies.GENERIC
 
     override fun leavesRange(): Int = 4
 
@@ -21,10 +20,10 @@ class OakTree(block: Block) : BaseTree(block) {
     }
 
     override fun isSame(block: Block): Boolean {
-        return if (block.isTree()) block.asTree().species == SPECIES else false
+        return if (block.isTree()) block.asTree().species == TreeSpecies.GENERIC else false
     }
 
     override fun isSameLeaves(block: Block): Boolean {
-        return if (block.isLeaves()) block.asLeaves().species == SPECIES else false
+        return if (block.isLeaves()) block.asLeaves().species == TreeSpecies.GENERIC else false
     }
 }
