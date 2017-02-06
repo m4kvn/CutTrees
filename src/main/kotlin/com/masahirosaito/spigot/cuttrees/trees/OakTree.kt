@@ -22,6 +22,8 @@ class OakTree(val block: Block) {
 
     fun isSame(block: Block): Boolean = if (block.isTree()) block.asTree().species == TreeSpecies.GENERIC else false
 
+    fun getBlocks() = getRelativeTrees(bottom)
+
     fun getRelativeTrees(block: Block): MutableSet<Block> {
         val unCheckedBlocks = mutableListOf(block)
         val checkedBlocks = mutableSetOf<Block>()
