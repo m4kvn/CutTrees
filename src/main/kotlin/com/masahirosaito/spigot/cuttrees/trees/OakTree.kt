@@ -5,20 +5,19 @@ import org.bukkit.TreeSpecies
 import org.bukkit.block.Block
 
 class OakTree(val block: Block) {
-    val MAX_HEIGHT = 8
+    val MAX_HEIGHT = 9
     val MIN_HEIGHT = 4
     val MAX_LOG_BRANCH = 4
     val LEAVES_RANGE = 3
     val SPECIES = TreeSpecies.GENERIC
 
     fun breakTree(): Boolean {
-        val bottom = getBottom(block)
-        val blocks = getBlocks(bottom)
-        val top = getTop(blocks)
+        val stem = getStem(block)
+        val blocks = getBlocks(stem)
 
-        if (!isValid(bottom, top)) return false
+        if (!isValid(blocks)) return false
 
-        val leaves = getLeaves(bottom, top, blocks)
+        val leaves = getLeaves(blocks)
 
         blocks.forEach { it.breakNaturally() }
         leaves.forEach { it.breakNaturally() }
@@ -26,21 +25,18 @@ class OakTree(val block: Block) {
         return true
     }
 
-    fun isValid(bottom: Block, top: Block): Boolean {
-        return (top.y - bottom.y).let { MIN_HEIGHT-1 <= it && it <= MAX_HEIGHT+1 }
+    fun isValid(blocks: MutableSet<Block>): Boolean {
+        return (getTop(blocks).y - getBottom(blocks).y + 1).let {
+            println("Tree Height: $it")
+            MIN_HEIGHT <= it && it <= MAX_HEIGHT
+        }
     }
 
-    fun getBottom(block: Block): Block = getRelativeTrees(block).minBy { it.y } ?: throw Exception()
+    fun getStem(block: Block) = getRelativeTrees(block).minBy { it.y } ?: throw Exception()
+
+    fun getBottom(blocks: MutableSet<Block>) = blocks.minBy { it.y } ?: throw Exception()
 
     fun getTop(blocks: MutableSet<Block>): Block = blocks.maxBy { it.y } ?: throw Exception()
-
-    fun getMinXBlock(blocks: MutableSet<Block>) = blocks.minBy { it.x } ?: throw Exception()
-
-    fun getMaxXBlock(blocks: MutableSet<Block>) = blocks.maxBy { it.x } ?: throw Exception()
-
-    fun getMinZBlock(blocks: MutableSet<Block>) = blocks.minBy { it.z } ?: throw Exception()
-
-    fun getMaxZBlock(blocks: MutableSet<Block>) = blocks.maxBy { it.z } ?: throw Exception()
 
     fun isSame(block: Block): Boolean = if (block.isTree()) block.asTree().species == SPECIES else false
 
@@ -48,18 +44,12 @@ class OakTree(val block: Block) {
 
     fun getBlocks(bottom: Block) = getRelativeTrees(bottom)
 
-    fun getLeaves(bottom: Block, top: Block, blocks: MutableSet<Block>): List<Block> {
-        val maxX = getMaxXBlock(blocks).x + LEAVES_RANGE
-        val minX = getMinXBlock(blocks).x - LEAVES_RANGE
-        val maxZ = getMaxZBlock(blocks).z + LEAVES_RANGE
-        val minZ = getMinZBlock(blocks).z - LEAVES_RANGE
-        val maxY = top.y + LEAVES_RANGE
-        val minY = bottom.y
-
-        return mutableListOf<Block>().apply {
-            for (x in minX..maxX) for (z in minZ..maxZ) for (y in minY..maxY)
-                add(blocks.first().world.getBlockAt(x, y, z))
-        }.filter { isSameLeaves(it) }
+    fun getLeaves(blocks: MutableSet<Block>): MutableSet<Block> {
+        return mutableSetOf<Block>().apply {
+            blocks.forEach { block ->
+                addAll(block.getRelatives(LEAVES_RANGE).filter { isSameLeaves(it) })
+            }
+        }
     }
 
     fun getRelativeTrees(block: Block): MutableSet<Block> {
