@@ -9,3 +9,5 @@ gradlew
 gradlew.bat
 src/test/
 build/
+/gradle.properties
+.idea/inspectionProfiles/

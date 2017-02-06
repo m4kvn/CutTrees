@@ -62,8 +62,11 @@ processResources {
     }
 }
 
+String destDirPath = buildPath
+
 jar {
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+    jar.setDestinationDir(new File(destDirPath))
 }
 
 apply plugin: 'maven'
