@@ -4,6 +4,9 @@ import com.masahirosaito.spigot.cuttrees.utils.getRelatives
 import org.bukkit.block.Block
 
 abstract class BaseTree(val block: Block) {
+    val stem = getStem(block)
+    val blocks = getBlocks(stem)
+    val leaves = getLeaves(blocks)
 
     abstract fun leavesRange(): Int
 
@@ -16,12 +19,7 @@ abstract class BaseTree(val block: Block) {
     abstract fun isSameLeaves(block: Block): Boolean
 
     fun breakTree(): Boolean {
-        val stem = getStem(block)
-        val blocks = getBlocks(stem)
-
         if (!isValid(blocks)) return false
-
-        val leaves = getLeaves(blocks)
 
         blocks.forEach { it.breakNaturally() }
         leaves.forEach { it.breakNaturally() }
