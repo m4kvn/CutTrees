@@ -44,11 +44,12 @@ abstract class BaseTree(val block: Block) {
     }
 
     fun getRelativeTrees(block: Block): MutableSet<Block> {
-        val unCheckedBlocks = mutableListOf(block)
+        val unCheckedBlocks = mutableSetOf(block)
         val checkedBlocks = mutableSetOf<Block>()
 
         while (unCheckedBlocks.isNotEmpty()) {
-            unCheckedBlocks.removeAt(0).let { b ->
+            unCheckedBlocks.first().let { b ->
+                unCheckedBlocks.remove(b)
                 checkedBlocks.add(b)
                 unCheckedBlocks.addAll(b.getRelatives(1)
                         .filter { isSame(it) }
