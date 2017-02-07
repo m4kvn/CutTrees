@@ -10,9 +10,9 @@ import org.bukkit.block.Block
 class JungleTree(block: Block) : BaseTree(block) {
     val MIN_HEIGHT = 4
 
-    override fun leavesRange(): Int = 4
+    override fun leavesRange(): Int = 5
 
-    override fun maxLogBranch(): Int = 4
+    override fun maxLogBranch(): Int = 5
 
     override fun isValid(blocks: MutableSet<Block>): Boolean {
         return (getTop(blocks).y - getBottom(blocks).y + 1).let {
