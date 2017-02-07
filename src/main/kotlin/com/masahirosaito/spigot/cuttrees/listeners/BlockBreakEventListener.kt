@@ -21,8 +21,10 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
 
         if (event.isCancelled) return
 
-        if (event.block.isTree()) {
-            when (event.block.asTree().species) {
+        if (event.player.isSneaking) return
+
+        val tree = when {
+            event.block.isTree() -> when (event.block.asTree().species) {
                 TreeSpecies.GENERIC -> OakTree(event.block)
                 TreeSpecies.JUNGLE -> JungleTree(event.block)
                 TreeSpecies.DARK_OAK -> DarkOakTree(event.block)
@@ -30,17 +32,18 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
                 TreeSpecies.ACACIA -> AcaciaTree(event.block)
                 TreeSpecies.REDWOOD -> RedWoodTree(event.block)
                 else -> return
-            }.breakTree()
-        }
-
-        if (event.block.isMushroom()) {
-            println("block is Mushroom [Type = ${event.block.asMushroom().itemType}]")
-            when (event.block.asMushroom().itemType) {
+            }
+            event.block.isMushroom() -> when (event.block.asMushroom().itemType){
                 Material.HUGE_MUSHROOM_1 -> WhiteMushroom(event.block)
                 Material.HUGE_MUSHROOM_2 -> RedMushroom(event.block)
                 else -> return
-            }.breakTree()
+            }
+            else -> return
         }
+
+        tree.breakTree()
+
+
 
 //        if (event.isCancelled) return
 //        if (isInValid(event)) return antiBlockManager.remove(event.block)
