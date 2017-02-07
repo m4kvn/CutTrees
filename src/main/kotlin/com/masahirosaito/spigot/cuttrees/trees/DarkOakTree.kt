@@ -9,7 +9,7 @@ import org.bukkit.block.Block
 
 class DarkOakTree(block: Block) : BaseTree(block) {
     val MAX_HEIGHT = 9
-    val MIN_HEIGHT = 4
+    val MIN_HEIGHT = 6
 
     override fun leavesRange(): Int = 4
 
