@@ -19,6 +19,8 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
 
+        if (event.isCancelled) return
+
         if (event.block.isTree()) {
             when (event.block.asTree().species) {
                 TreeSpecies.GENERIC -> OakTree(event.block)
@@ -35,6 +37,7 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
             println("block is Mushroom [Type = ${event.block.asMushroom().itemType}]")
             when (event.block.asMushroom().itemType) {
                 Material.HUGE_MUSHROOM_1 -> WhiteMushroom(event.block)
+                Material.HUGE_MUSHROOM_2 -> RedMushroom(event.block)
                 else -> return
             }.breakTree()
         }
