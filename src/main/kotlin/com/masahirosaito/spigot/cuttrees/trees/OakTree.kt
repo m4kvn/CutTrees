@@ -13,10 +13,7 @@ class OakTree(block: Block) : BaseTree(block) {
     override fun maxLogBranch(): Int = 3
 
     override fun isValid(blocks: MutableSet<Block>): Boolean {
-        return (getTop(blocks).y - getBottom(blocks).y + 1).let {
-            println("Tree Height: $it")
-            MIN_HEIGHT <= it && it <= MAX_HEIGHT
-        }
+        return (getTop(blocks).y - getBottom(blocks).y + 1).let { MIN_HEIGHT <= it && it <= MAX_HEIGHT }
     }
 
     override fun isSame(block: Block): Boolean {

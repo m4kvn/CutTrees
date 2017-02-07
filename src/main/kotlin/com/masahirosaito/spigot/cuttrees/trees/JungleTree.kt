@@ -15,9 +15,7 @@ class JungleTree(block: Block) : BaseTree(block) {
     override fun maxLogBranch(): Int = 5
 
     override fun isValid(blocks: MutableSet<Block>): Boolean {
-        return (getTop(blocks).y - getBottom(blocks).y + 1).let {
-            MIN_HEIGHT <= it.apply { println("Tree Height: $it") }
-        }
+        return (getTop(blocks).y - getBottom(blocks).y + 1).let { MIN_HEIGHT <= it }
     }
 
     override fun isSame(block: Block): Boolean {
