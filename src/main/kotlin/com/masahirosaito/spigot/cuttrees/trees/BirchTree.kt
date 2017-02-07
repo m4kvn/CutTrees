@@ -8,7 +8,7 @@ import org.bukkit.TreeSpecies
 import org.bukkit.block.Block
 
 class BirchTree(block: Block) : BaseTree(block) {
-    val MAX_HEIGHT = 6
+    val MAX_HEIGHT = 7
     val MIN_HEIGHT = 4
 
     override fun leavesRange(): Int = 4
