@@ -26,7 +26,7 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
             TreeSpecies.DARK_OAK -> DarkOakTree(event.block)
             TreeSpecies.BIRCH -> BirchTree(event.block)
             TreeSpecies.ACACIA -> AcaciaTree(event.block)
-//            TreeSpecies.REDWOOD -> RedWoodTree(event.block)
+            TreeSpecies.REDWOOD -> RedWoodTree(event.block)
             else -> return
         }
 
