@@ -2,13 +2,13 @@ package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.CutTreesAbstract
-import com.masahirosaito.spigot.cuttrees.events.NoReduceTreeBreakEvent
-import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.trees.*
-import com.masahirosaito.spigot.cuttrees.utils.*
-import net.md_5.bungee.api.ChatColor
+import com.masahirosaito.spigot.cuttrees.utils.asMushroom
+import com.masahirosaito.spigot.cuttrees.utils.asTree
+import com.masahirosaito.spigot.cuttrees.utils.isMushroom
+import com.masahirosaito.spigot.cuttrees.utils.isTree
+import org.bukkit.Material
 import org.bukkit.TreeSpecies
-import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -18,19 +18,26 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
-        if (!event.block.isTree()) return
 
-        val tree = when (event.block.asTree().species) {
-            TreeSpecies.GENERIC -> OakTree(event.block)
-            TreeSpecies.JUNGLE -> JungleTree(event.block)
-            TreeSpecies.DARK_OAK -> DarkOakTree(event.block)
-            TreeSpecies.BIRCH -> BirchTree(event.block)
-            TreeSpecies.ACACIA -> AcaciaTree(event.block)
-            TreeSpecies.REDWOOD -> RedWoodTree(event.block)
-            else -> return
+        if (event.block.isTree()) {
+            when (event.block.asTree().species) {
+                TreeSpecies.GENERIC -> OakTree(event.block)
+                TreeSpecies.JUNGLE -> JungleTree(event.block)
+                TreeSpecies.DARK_OAK -> DarkOakTree(event.block)
+                TreeSpecies.BIRCH -> BirchTree(event.block)
+                TreeSpecies.ACACIA -> AcaciaTree(event.block)
+                TreeSpecies.REDWOOD -> RedWoodTree(event.block)
+                else -> return
+            }.breakTree()
         }
 
-        tree.breakTree()
+        if (event.block.isMushroom()) {
+            println("block is Mushroom [Type = ${event.block.asMushroom().itemType}]")
+            when (event.block.asMushroom().itemType) {
+                Material.HUGE_MUSHROOM_1 -> WhiteMushroom(event.block)
+                else -> return
+            }.breakTree()
+        }
 
 //        if (event.isCancelled) return
 //        if (isInValid(event)) return antiBlockManager.remove(event.block)
