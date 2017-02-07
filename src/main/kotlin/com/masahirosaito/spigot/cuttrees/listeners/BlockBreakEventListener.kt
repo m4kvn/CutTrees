@@ -4,6 +4,7 @@ import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.CutTreesAbstract
 import com.masahirosaito.spigot.cuttrees.events.NoReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
+import com.masahirosaito.spigot.cuttrees.trees.DarkOakTree
 import com.masahirosaito.spigot.cuttrees.trees.JungleTree
 import com.masahirosaito.spigot.cuttrees.trees.OakTree
 import com.masahirosaito.spigot.cuttrees.utils.*
@@ -23,6 +24,7 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
         val tree = when (event.block.asTree().species) {
             TreeSpecies.GENERIC -> OakTree(event.block)
             TreeSpecies.JUNGLE -> JungleTree(event.block)
+            TreeSpecies.DARK_OAK -> DarkOakTree(event.block)
             else -> return
         }
 
