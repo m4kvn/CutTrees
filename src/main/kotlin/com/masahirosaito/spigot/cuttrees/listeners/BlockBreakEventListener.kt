@@ -4,12 +4,11 @@ import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.CutTreesAbstract
 import com.masahirosaito.spigot.cuttrees.events.NoReduceTreeBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
-import com.masahirosaito.spigot.cuttrees.trees.DarkOakTree
-import com.masahirosaito.spigot.cuttrees.trees.JungleTree
-import com.masahirosaito.spigot.cuttrees.trees.OakTree
+import com.masahirosaito.spigot.cuttrees.trees.*
 import com.masahirosaito.spigot.cuttrees.utils.*
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.TreeSpecies
+import org.bukkit.block.Block
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -25,6 +24,9 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
             TreeSpecies.GENERIC -> OakTree(event.block)
             TreeSpecies.JUNGLE -> JungleTree(event.block)
             TreeSpecies.DARK_OAK -> DarkOakTree(event.block)
+            TreeSpecies.BIRCH -> BirchTree(event.block)
+            TreeSpecies.ACACIA -> AcaciaTree(event.block)
+//            TreeSpecies.REDWOOD -> RedWoodTree(event.block)
             else -> return
         }
 
@@ -66,3 +68,4 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
 //        }
 //    }
 }
+
