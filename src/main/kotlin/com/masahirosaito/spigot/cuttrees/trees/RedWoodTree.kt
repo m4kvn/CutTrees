@@ -11,13 +11,15 @@ class RedWoodTree(block: Block) : BaseTree(block) {
     val MAX_HEIGHT = 29
     val MIN_HEIGHT = 4
 
+    override fun maxHeight(): Int = 29
+
+    override fun minHeight(): Int = 4
+
     override fun leavesRange(): Int = 4
 
     override fun maxLogBranch(): Int = 1
 
-    override fun isValid(blocks: MutableSet<Block>): Boolean {
-        return (getTop(blocks).y - getBottom(blocks).y + 1).let { MIN_HEIGHT <= it && it <= MAX_HEIGHT }
-    }
+    override fun isValid(blocks: MutableSet<Block>): Boolean = true
 
     override fun isSame(block: Block): Boolean {
         return if (block.isTree()) block.asTree().species == TreeSpecies.REDWOOD else false

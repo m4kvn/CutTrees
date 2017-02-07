@@ -5,16 +5,16 @@ import org.bukkit.TreeSpecies
 import org.bukkit.block.Block
 
 class OakTree(block: Block) : BaseTree(block) {
-    val MAX_HEIGHT = 9
-    val MIN_HEIGHT = 4
+
+    override fun maxHeight(): Int = 9
+
+    override fun minHeight(): Int = 4
 
     override fun leavesRange(): Int = 4
 
     override fun maxLogBranch(): Int = 3
 
-    override fun isValid(blocks: MutableSet<Block>): Boolean {
-        return (getTop(blocks).y - getBottom(blocks).y + 1).let { MIN_HEIGHT <= it && it <= MAX_HEIGHT }
-    }
+    override fun isValid(blocks: MutableSet<Block>): Boolean = true
 
     override fun isSame(block: Block): Boolean {
         return if (block.isTree()) block.asTree().species == TreeSpecies.GENERIC else false
