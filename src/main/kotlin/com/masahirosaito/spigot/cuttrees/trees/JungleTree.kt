@@ -18,6 +18,8 @@ class JungleTree(block: Block) : BaseTree(block) {
 
     override fun maxLogBranch(): Int = 5
 
+    override fun relativeRange(): Int = 2
+
     override fun isValid(blocks: MutableSet<Block>): Boolean = true
 
     override fun isSame(block: Block): Boolean {

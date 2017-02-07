@@ -16,6 +16,8 @@ abstract class BaseTree(val block: Block) {
 
     abstract fun maxLogBranch(): Int
 
+    abstract fun relativeRange(): Int
+
     abstract fun isValid(blocks: MutableSet<Block>): Boolean
 
     abstract fun isSame(block: Block): Boolean
@@ -62,7 +64,7 @@ abstract class BaseTree(val block: Block) {
             unCheckedBlocks.first().let { b ->
                 unCheckedBlocks.remove(b)
                 checkedBlocks.add(b)
-                unCheckedBlocks.addAll(b.getRelatives(1)
+                unCheckedBlocks.addAll(b.getRelatives(relativeRange())
                         .filter { isSame(it) }
                         .filter { block.x - maxLogBranch() <= it.x && it.x <= block.x + maxLogBranch() }
                         .filter { block.z - maxLogBranch() <= it.z && it.z <= block.z + maxLogBranch() }

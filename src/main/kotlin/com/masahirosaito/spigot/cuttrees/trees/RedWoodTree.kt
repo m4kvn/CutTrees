@@ -8,8 +8,6 @@ import org.bukkit.TreeSpecies
 import org.bukkit.block.Block
 
 class RedWoodTree(block: Block) : BaseTree(block) {
-    val MAX_HEIGHT = 29
-    val MIN_HEIGHT = 4
 
     override fun maxHeight(): Int = 29
 
@@ -18,6 +16,8 @@ class RedWoodTree(block: Block) : BaseTree(block) {
     override fun leavesRange(): Int = 4
 
     override fun maxLogBranch(): Int = 1
+
+    override fun relativeRange(): Int = 1
 
     override fun isValid(blocks: MutableSet<Block>): Boolean = true
 

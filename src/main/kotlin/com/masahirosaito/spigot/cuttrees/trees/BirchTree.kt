@@ -17,6 +17,8 @@ class BirchTree(block: Block) : BaseTree(block) {
 
     override fun maxLogBranch(): Int = 0
 
+    override fun relativeRange(): Int = 1
+
     override fun isValid(blocks: MutableSet<Block>): Boolean = true
 
     override fun isSame(block: Block): Boolean {
