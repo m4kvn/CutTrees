@@ -12,9 +12,13 @@ abstract class CutTreesTool(val itemStack: ItemStack) {
 
     abstract fun canBeDamaged(): Boolean
 
+    abstract fun calcDamage(tree: BaseTree): Int
+
+     fun damage(tree: BaseTree): Boolean {
+         return if (!isUnBreakable()) itemStack.damage(calcDamage(tree)).let { true } else false
+     }
+
     fun isUnBreakable() = if (canBeDamaged()) itemStack.itemMeta.spigot().isUnbreakable else true
 
     fun isBroken() = if (!isUnBreakable()) itemStack.isBroken() else false
-
-    fun damage(tree: BaseTree) = if (!isUnBreakable()) true.apply { itemStack.damage(tree.blocks.size) } else false
 }
