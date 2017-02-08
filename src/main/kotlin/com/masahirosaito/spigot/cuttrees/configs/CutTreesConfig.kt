@@ -3,7 +3,6 @@ package com.masahirosaito.spigot.cuttrees.configs
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
-import org.bukkit.Material
 import java.io.File
 
 data class CutTreesConfig(

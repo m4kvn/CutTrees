@@ -2,6 +2,7 @@ package com.masahirosaito.spigot.cuttrees.players
 
 import com.masahirosaito.spigot.cuttrees.tools.CutTreesAxe
 import com.masahirosaito.spigot.cuttrees.trees.BaseTree
+import com.masahirosaito.spigot.cuttrees.utils.isCreativeMode
 import com.masahirosaito.spigot.cuttrees.utils.itemInMainHand
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -30,4 +31,6 @@ class CutTreesPlayer(val player: Player) {
     fun DamageToTool(tree: BaseTree) {
         if (tool.damage(tree)) if (tool.isBroken()) breakItemInMainHand()
     }
+
+    fun isCreative() = player.isCreativeMode()
 }

@@ -2,6 +2,7 @@ package com.masahirosaito.spigot.cuttrees
 
 import com.masahirosaito.spigot.cuttrees.configs.CutTreesConfig
 import com.masahirosaito.spigot.cuttrees.listeners.BlockBreakEventListener
+import com.masahirosaito.spigot.cuttrees.listeners.CutTreesIncrementStaticsEventLestener
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -15,7 +16,8 @@ class CutTrees : JavaPlugin() {
         messenger = Messenger(this)
 
         listenerRegister(
-                BlockBreakEventListener(this)
+                BlockBreakEventListener(this),
+                CutTreesIncrementStaticsEventLestener(this)
         )
     }
 
