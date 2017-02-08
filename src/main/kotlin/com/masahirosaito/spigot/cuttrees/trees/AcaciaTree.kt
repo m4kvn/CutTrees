@@ -18,7 +18,7 @@ class AcaciaTree(block: Block) : BaseTree(block) {
 
     override fun leavesRange(): Int = 4
 
-    override fun maxLogBranch(): Int = 2
+    override fun maxLogBranch(): Int = 3
 
     override fun relativeRange(): Int = 2
 
