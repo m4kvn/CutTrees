@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
-class CutTreesIncrementStaticsEventLestener(plugin: CutTrees) : Listener {
+class CutTreesIncrementStaticsEventListener(plugin: CutTrees) : Listener {
     val configs = plugin.configs
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -14,8 +14,7 @@ class CutTreesIncrementStaticsEventLestener(plugin: CutTrees) : Listener {
         if (event.isCancelled) return
 
         if (!configs.incrementStatistics || (!configs.onCreativeStatics && event.player.isCreative())) {
-            event.isCancelled = true
-            return
+            return event.cancel()
         }
     }
 }
