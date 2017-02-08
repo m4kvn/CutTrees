@@ -1,27 +1,26 @@
 package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
-import com.masahirosaito.spigot.cuttrees.CutTreesAbstract
+import com.masahirosaito.spigot.cuttrees.events.CutTreesBreakEvent
 import com.masahirosaito.spigot.cuttrees.trees.*
-import com.masahirosaito.spigot.cuttrees.utils.asMushroom
-import com.masahirosaito.spigot.cuttrees.utils.asTree
-import com.masahirosaito.spigot.cuttrees.utils.isMushroom
-import com.masahirosaito.spigot.cuttrees.utils.isTree
+import com.masahirosaito.spigot.cuttrees.utils.*
 import org.bukkit.Material
 import org.bukkit.TreeSpecies
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.inventory.ItemStack
 
-class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), Listener {
+class BlockBreakEventListener(val plugin: CutTrees) : Listener {
+    val configs = plugin.configs
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
 
         if (event.isCancelled) return
 
-        if (event.player.isSneaking) return
+        if (!event.player.itemInMainHand().isAxe()) return
 
         val tree = when {
             event.block.isTree() -> when (event.block.asTree().species) {
@@ -33,7 +32,7 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
                 TreeSpecies.REDWOOD -> RedWoodTree(event.block)
                 else -> return
             }
-            event.block.isMushroom() -> when (event.block.asMushroom().itemType){
+            event.block.isMushroom() -> when (event.block.asMushroom().itemType) {
                 Material.HUGE_MUSHROOM_1 -> WhiteMushroom(event.block)
                 Material.HUGE_MUSHROOM_2 -> RedMushroom(event.block)
                 else -> return
@@ -41,44 +40,21 @@ class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), List
             else -> return
         }
 
-        tree.breakTree()
+        val breakEvent = CutTreesBreakEvent(tree, event.player).call(plugin).apply {
+            if (isCancelled) return
 
-
-
-//        if (event.isCancelled) return
-//        if (isInValid(event)) return antiBlockManager.remove(event.block)
-//
-//        debugMsg(event)
-//
-//        if (isNotReduceDurability(event)) {
-//            NoReduceTreeBreakEvent(event, plugin).call(plugin)
-//        } else {
-//            ReduceTreeBreakEvent(event, plugin).call(plugin)
-//        }
+            tree.breakTrees(player.itemInMainHand())
+            tree.breakLeaves(player.itemInMainHand())
+        }
     }
 
-//    private fun debugMsg(event: BlockBreakEvent) {
-//        messenger.debug(buildString {
-//            append("${ChatColor.GOLD}")
-//            append("[Valid Event] $event")
-//            append("${ChatColor.RESET}")
-//        })
-//    }
-//
-//    private fun isNotReduceDurability(event: BlockBreakEvent): Boolean = when {
-//        (event.player.isCreativeMode() && !configs.onCreativeDurabilityReduce) -> true
-//        (event.player.itemInMainHand().itemMeta.spigot().isUnbreakable) -> true
-//        else -> false
-//    }
-//
-//    private fun isInValid(event: BlockBreakEvent): Boolean {
-//        return when {
-//            !configs.isValidBlock(event.block) -> true.apply { messenger.debug("Block is InValid") }
-//            !configs.isNotAnti(event.block) -> true.apply { messenger.debug("Block is AntiBlock") }
-//            !configs.isValidTool(event.player.itemInMainHand()) -> true.apply { messenger.debug("Tool is InValid") }
-//            !configs.isSneaking(event.player) -> true.apply { messenger.debug("Player is not Sneaking") }
-//            else -> false
-//        }
-//    }
+    fun ItemStack.isAxe() = when (type) {
+        Material.WOOD_AXE,
+        Material.STONE_AXE,
+        Material.GOLD_AXE,
+        Material.IRON_AXE,
+        Material.DIAMOND_AXE -> true
+        else -> false
+    }
 }
 

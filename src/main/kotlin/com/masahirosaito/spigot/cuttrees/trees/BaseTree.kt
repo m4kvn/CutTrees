@@ -2,6 +2,7 @@ package com.masahirosaito.spigot.cuttrees.trees
 
 import com.masahirosaito.spigot.cuttrees.utils.getRelatives
 import org.bukkit.block.Block
+import org.bukkit.inventory.ItemStack
 
 abstract class BaseTree(val block: Block) {
     val stem = getStem(block)
@@ -28,27 +29,21 @@ abstract class BaseTree(val block: Block) {
         minHeight() <= it && it <= maxHeight()
     }
 
-    fun breakTree(): Boolean {
-        if (!isValidHeight(blocks)) return false
-        if (!isValid(blocks)) return false
+    fun breakTrees(tool: ItemStack): Boolean = execBreak(blocks, tool)
 
-        blocks.forEach { it.breakNaturally() }
-        leaves.forEach { it.breakNaturally() }
-
-        return true
-    }
+    fun breakLeaves(tool: ItemStack) = execBreak(leaves, tool)
 
     fun height(blocks: MutableSet<Block>) = getTop(blocks).y - getBottom(blocks).y + 1
-
-    fun getStem(block: Block) = getRelativeTrees(block).minBy { it.y } ?: throw Exception()
 
     fun getBottom(blocks: MutableSet<Block>) = blocks.minBy { it.y } ?: throw Exception()
 
     fun getTop(blocks: MutableSet<Block>): Block = blocks.maxBy { it.y } ?: throw Exception()
 
-    fun getBlocks(bottom: Block) = getRelativeTrees(bottom)
+    private fun getStem(block: Block) = getRelativeTrees(block).minBy { it.y } ?: throw Exception()
 
-    fun getLeaves(blocks: MutableSet<Block>): MutableSet<Block> {
+    private fun getBlocks(bottom: Block) = getRelativeTrees(bottom)
+
+    private fun getLeaves(blocks: MutableSet<Block>): MutableSet<Block> {
         return mutableSetOf<Block>().apply {
             blocks.forEach { block ->
                 addAll(block.getRelatives(leavesRange()).filter { isSameLeaves(it) })
@@ -56,7 +51,7 @@ abstract class BaseTree(val block: Block) {
         }
     }
 
-    fun getRelativeTrees(block: Block): MutableSet<Block> {
+    private fun getRelativeTrees(block: Block): MutableSet<Block> {
         val unCheckedBlocks = mutableSetOf(block)
         val checkedBlocks = mutableSetOf<Block>()
 
@@ -73,5 +68,14 @@ abstract class BaseTree(val block: Block) {
         }
 
         return checkedBlocks
+    }
+
+    private fun execBreak(blocks: MutableSet<Block>, itemStack: ItemStack): Boolean {
+        if (!isValidHeight(blocks)) return false
+        if (!isValid(blocks)) return false
+
+        blocks.forEach { it.breakNaturally(itemStack) }
+
+        return true
     }
 }
