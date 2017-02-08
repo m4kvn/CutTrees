@@ -1,11 +1,9 @@
 package com.masahirosaito.spigot.cuttrees.trees
 
-import com.masahirosaito.spigot.cuttrees.players.CutTreesPlayer
 import com.masahirosaito.spigot.cuttrees.tools.CutTreesTool
 import com.masahirosaito.spigot.cuttrees.utils.getRelatives
 import org.bukkit.Material
 import org.bukkit.block.Block
-import org.bukkit.inventory.ItemStack
 
 abstract class BaseTree(val block: Block) {
     val stem = getStem(block)
@@ -30,7 +28,7 @@ abstract class BaseTree(val block: Block) {
 
     abstract fun isSameLeaves(block: Block): Boolean
 
-    fun isValidHeight(blocks: MutableSet<Block>)= height(blocks).let { minHeight() <= it && it <= maxHeight() }
+    fun isValidHeight(blocks: MutableSet<Block>) = height(blocks).let { minHeight() <= it && it <= maxHeight() }
 
     fun breakTrees(tool: CutTreesTool? = null): Boolean = execBreak(blocks, tool)
 
@@ -77,7 +75,7 @@ abstract class BaseTree(val block: Block) {
         if (!isValidHeight(blocks)) return false
         if (!isValid(blocks)) return false
 
-        blocks.forEach { if (tool != null ) it.breakNaturally(tool.itemStack) else it.breakNaturally()}
+        blocks.forEach { if (tool != null) it.breakNaturally(tool.itemStack) else it.breakNaturally() }
 
         return true
     }
