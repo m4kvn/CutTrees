@@ -6,11 +6,9 @@ import com.masahirosaito.spigot.cuttrees.events.CutTreesEvent
 import com.masahirosaito.spigot.cuttrees.events.CutTreesIncrementStaticsEvent
 import com.masahirosaito.spigot.cuttrees.events.CutTreesToolDamageEvent
 import com.masahirosaito.spigot.cuttrees.players.CutTreesPlayer
-import com.masahirosaito.spigot.cuttrees.tools.CutTreesAxe
 import com.masahirosaito.spigot.cuttrees.trees.*
 import com.masahirosaito.spigot.cuttrees.utils.*
 import org.bukkit.Material
-import org.bukkit.Statistic
 import org.bukkit.TreeSpecies
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -18,7 +16,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 
 class BlockBreakEventListener(val plugin: CutTrees) : Listener {
-    val configs = plugin.configs
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
