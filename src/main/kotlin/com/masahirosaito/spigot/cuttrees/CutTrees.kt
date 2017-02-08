@@ -1,6 +1,5 @@
 package com.masahirosaito.spigot.cuttrees
 
-import com.masahirosaito.spigot.cuttrees.configs.Configs
 import com.masahirosaito.spigot.cuttrees.configs.ConfigsLoader
 import com.masahirosaito.spigot.cuttrees.listeners.BlockBreakEventListener
 import org.bukkit.event.Listener
