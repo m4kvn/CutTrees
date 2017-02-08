@@ -33,4 +33,6 @@ class CutTreesPlayer(val player: Player) {
     }
 
     fun isCreative() = player.isCreativeMode()
+
+    fun isSneaking() = player.isSneaking
 }
