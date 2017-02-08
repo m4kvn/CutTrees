@@ -20,7 +20,10 @@ data class CutTreesConfig(
         val onCreativeDurability: Boolean = false,
 
         @SerializedName("クリエイティブモード時に統計を増やす")
-        val onCreativeStatics: Boolean = false
+        val onCreativeStatics: Boolean = false,
+
+        @SerializedName("デバッグメッセージを表示する")
+        val onDebug: Boolean = false
 
 ) {
     companion object {

@@ -23,6 +23,8 @@ class CutTrees : JavaPlugin() {
                 CutTreesToolDamageEventListener(this),
                 CutTreesIncrementStaticsEventListener(this)
         )
+
+        messenger.debug("Configs: $configs")
     }
 
     private fun listenerRegister(vararg listeners: Listener) {
