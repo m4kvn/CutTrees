@@ -1,5 +1,7 @@
 package com.masahirosaito.spigot.cuttrees.trees
 
+import com.masahirosaito.spigot.cuttrees.players.CutTreesPlayer
+import com.masahirosaito.spigot.cuttrees.tools.CutTreesTool
 import com.masahirosaito.spigot.cuttrees.utils.getRelatives
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -30,9 +32,9 @@ abstract class BaseTree(val block: Block) {
 
     fun isValidHeight(blocks: MutableSet<Block>)= height(blocks).let { minHeight() <= it && it <= maxHeight() }
 
-    fun breakTrees(tool: ItemStack? = null): Boolean = execBreak(blocks, tool)
+    fun breakTrees(tool: CutTreesTool? = null): Boolean = execBreak(blocks, tool)
 
-    fun breakLeaves(tool: ItemStack? = null) = execBreak(leaves, tool)
+    fun breakLeaves(tool: CutTreesTool? = null) = execBreak(leaves, tool)
 
     fun height(blocks: MutableSet<Block>) = getTop(blocks).y - getBottom(blocks).y + 1
 
@@ -71,11 +73,11 @@ abstract class BaseTree(val block: Block) {
         return checkedBlocks
     }
 
-    private fun execBreak(blocks: MutableSet<Block>, itemStack: ItemStack? = null): Boolean {
+    private fun execBreak(blocks: MutableSet<Block>, tool: CutTreesTool? = null): Boolean {
         if (!isValidHeight(blocks)) return false
         if (!isValid(blocks)) return false
 
-        blocks.forEach { if (itemStack != null ) it.breakNaturally(itemStack) else it.breakNaturally()}
+        blocks.forEach { if (tool != null ) it.breakNaturally(tool.itemStack) else it.breakNaturally()}
 
         return true
     }

@@ -5,6 +5,7 @@ import com.masahirosaito.spigot.cuttrees.events.CutTreesBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.CutTreesEvent
 import com.masahirosaito.spigot.cuttrees.events.CutTreesIncrementStaticsEvent
 import com.masahirosaito.spigot.cuttrees.events.CutTreesToolDamageEvent
+import com.masahirosaito.spigot.cuttrees.players.CutTreesPlayer
 import com.masahirosaito.spigot.cuttrees.tools.CutTreesAxe
 import com.masahirosaito.spigot.cuttrees.trees.*
 import com.masahirosaito.spigot.cuttrees.utils.*
@@ -25,7 +26,7 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
 
         CutTreesEvent(event).call(plugin).apply { if (isCancelled) return }
 
-        val tool = CutTreesAxe(event.player.itemInMainHand()).apply { if (!isValid()) return }
+        val player = CutTreesPlayer(event.player).apply { if (!isValid()) return }
 
         val tree = when {
             event.block.isTree() -> when (event.block.asTree().species) {
@@ -45,23 +46,17 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
             else -> return
         }
 
-        CutTreesBreakEvent(tree, tool).call(plugin).apply { if (isCancelled) return }
+        CutTreesBreakEvent(tree, player).call(plugin).apply { if (isCancelled) return }
 
-        tree.breakTrees(tool.itemStack)
+        tree.breakTrees(player.tool)
         tree.breakLeaves()
 
-        if (CutTreesToolDamageEvent(tree, tool).call(plugin).isNotCancelled) {
-            if (tool.damage(tree)) if (tool.isBroken()) event.player.onBreakItemInMainHand()
+        if (CutTreesToolDamageEvent(tree, player).call(plugin).isNotCancelled) {
+            player.DamageToTool(tree)
         }
 
-        if (CutTreesIncrementStaticsEvent(event.player, tree, tool).call(plugin).isNotCancelled) {
-            event.player.incrementStatistic(Statistic.MINE_BLOCK, tree.material(), tree.blocks.size)
-            event.player.incrementStatistic(Statistic.USE_ITEM, tool.material, tree.blocks.size)
-            event.player.sendMessage(buildString {
-                append("[統計]")
-                append(" MINE_BLOCK: ${event.player.getStatistic(Statistic.MINE_BLOCK, tree.material())}")
-                append(", USE_ITEM: ${event.player.getStatistic(Statistic.USE_ITEM, tool.material)}")
-            })
+        if (CutTreesIncrementStaticsEvent(tree, player).call(plugin).isNotCancelled) {
+            player.incrementStatics(tree)
         }
     }
 }
