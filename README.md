@@ -2,11 +2,15 @@
 
 CutTrees は、木を簡単にきるための Spigot Plugin です。
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nFoT79u2AEs" frameborder="0" allowfullscreen></iframe>
+
 斧を使って原木を破壊すると、その原木でできた木を破壊することができます。
 
-そのとき、破壊したブロックの数だけ斧の耐久値を消費し、斧の耐久値がなくなった場合は破壊されます。
+破壊したブロックの数だけ斧の耐久値を消費します。
 
-また、斧が耐久エンチャントを持っていた場合は、そのエンチャントレベルにあった数だけ耐久値を消費します。
+斧の耐久値がなくなった場合は破壊されます。
+
+斧が耐久エンチャントを持っていれば、エンチャントレベルによって耐久値の消費が減ります。
 
 最後に、壊したブロックの数だけプレイヤーの統計データを更新します。
 
@@ -53,6 +57,8 @@ CutTrees は、木を簡単にきるための Spigot Plugin です。
 ## 拡張機能を開発
 
 Maven または Gradle の依存関係にこのプラグインを追加することで開発を行います。
+
+Bintray : [https://bintray.com/masahirosaito-repo/cuttrees/CutTrees](https://bintray.com/masahirosaito-repo/cuttrees/CutTrees)
 
 ### Maven
 
