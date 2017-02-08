@@ -3,11 +3,13 @@ package com.masahirosaito.spigot.cuttrees.listeners
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.events.CutTreesBreakEvent
 import com.masahirosaito.spigot.cuttrees.events.CutTreesEvent
+import com.masahirosaito.spigot.cuttrees.events.CutTreesIncrementStaticsEvent
 import com.masahirosaito.spigot.cuttrees.events.CutTreesToolDamageEvent
 import com.masahirosaito.spigot.cuttrees.tools.CutTreesAxe
 import com.masahirosaito.spigot.cuttrees.trees.*
 import com.masahirosaito.spigot.cuttrees.utils.*
 import org.bukkit.Material
+import org.bukkit.Statistic
 import org.bukkit.TreeSpecies
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
@@ -49,14 +51,17 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
         tree.breakLeaves()
 
         if (CutTreesToolDamageEvent(tree, tool).call(plugin).isNotCancelled) {
-            event.player.sendMessage("Call CutTreesToolDamageEvent")
-            if (tool.damage(tree)) {
-                event.player.sendMessage("耐久値: ${tool.itemStack.getRemainingDurability()}")
-                if (tool.isBroken()) {
-                    event.player.onBreakItemInMainHand()
-                    event.player.sendMessage("道具が壊れた")
-                }
-            }
+            if (tool.damage(tree)) if (tool.isBroken()) event.player.onBreakItemInMainHand()
+        }
+
+        if (CutTreesIncrementStaticsEvent(event.player, tree, tool).call(plugin).isNotCancelled) {
+            event.player.incrementStatistic(Statistic.MINE_BLOCK, tree.material(), tree.blocks.size)
+            event.player.incrementStatistic(Statistic.USE_ITEM, tool.material, tree.blocks.size)
+            event.player.sendMessage(buildString {
+                append("[統計]")
+                append(" MINE_BLOCK: ${event.player.getStatistic(Statistic.MINE_BLOCK, tree.material())}")
+                append(", USE_ITEM: ${event.player.getStatistic(Statistic.USE_ITEM, tool.material)}")
+            })
         }
     }
 }
