@@ -30,9 +30,15 @@ abstract class BaseTree(val block: Block) {
 
     fun isValidHeight(blocks: MutableSet<Block>) = height(blocks).let { minHeight() <= it && it <= maxHeight() }
 
-    fun breakTrees(tool: CutTreesTool? = null): Boolean = execBreak(blocks, tool)
+    fun breakTree(tool: CutTreesTool? = null): Boolean {
+        if (!isValidHeight(blocks)) return false
+        if (!isValid(blocks)) return false
 
-    fun breakLeaves(tool: CutTreesTool? = null) = execBreak(leaves, tool)
+        blocks.forEach { if (tool != null) it.breakNaturally(tool.itemStack) else it.breakNaturally() }
+        leaves.forEach { it.breakNaturally() }
+
+        return true
+    }
 
     fun height(blocks: MutableSet<Block>) = getTop(blocks).y - getBottom(blocks).y + 1
 
@@ -69,14 +75,5 @@ abstract class BaseTree(val block: Block) {
         }
 
         return checkedBlocks
-    }
-
-    private fun execBreak(blocks: MutableSet<Block>, tool: CutTreesTool? = null): Boolean {
-        if (!isValidHeight(blocks)) return false
-        if (!isValid(blocks)) return false
-
-        blocks.forEach { if (tool != null) it.breakNaturally(tool.itemStack) else it.breakNaturally() }
-
-        return true
     }
 }
