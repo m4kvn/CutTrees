@@ -1,10 +1,13 @@
 package com.masahirosaito.spigot.cuttrees.trees
 
 import com.masahirosaito.spigot.cuttrees.utils.*
+import org.bukkit.Material
 import org.bukkit.TreeSpecies
 import org.bukkit.block.Block
 
 class OakTree(block: Block) : BaseTree(block) {
+
+    override fun material(): Material = Material.LOG
 
     override fun maxHeight(): Int = 9
 

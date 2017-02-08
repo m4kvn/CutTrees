@@ -5,10 +5,13 @@ import com.masahirosaito.spigot.cuttrees.utils.asTree
 import com.masahirosaito.spigot.cuttrees.utils.isLeaves
 import com.masahirosaito.spigot.cuttrees.utils.isTree
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.TreeSpecies
 import org.bukkit.block.Block
 
 class JungleTree(block: Block) : BaseTree(block) {
+
+    override fun material(): Material = Material.LOG
 
     override fun maxHeight(): Int = block.world.maxHeight
 

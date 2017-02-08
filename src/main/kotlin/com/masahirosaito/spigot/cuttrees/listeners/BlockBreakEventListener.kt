@@ -2,6 +2,9 @@ package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
 import com.masahirosaito.spigot.cuttrees.events.CutTreesBreakEvent
+import com.masahirosaito.spigot.cuttrees.events.CutTreesEvent
+import com.masahirosaito.spigot.cuttrees.events.CutTreesToolDamageEvent
+import com.masahirosaito.spigot.cuttrees.tools.CutTreesAxe
 import com.masahirosaito.spigot.cuttrees.trees.*
 import com.masahirosaito.spigot.cuttrees.utils.*
 import org.bukkit.Material
@@ -10,17 +13,17 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.inventory.ItemStack
 
 class BlockBreakEventListener(val plugin: CutTrees) : Listener {
     val configs = plugin.configs
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
-
         if (event.isCancelled) return
 
-        if (!event.player.itemInMainHand().isAxe()) return
+        CutTreesEvent(event).call(plugin).apply { if (isCancelled) return }
+
+        val tool = CutTreesAxe(event.player.itemInMainHand()).apply { if (!isValid()) return }
 
         val tree = when {
             event.block.isTree() -> when (event.block.asTree().species) {
@@ -40,21 +43,21 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
             else -> return
         }
 
-        val breakEvent = CutTreesBreakEvent(tree, event.player).call(plugin).apply {
-            if (isCancelled) return
+        CutTreesBreakEvent(tree, tool).call(plugin).apply { if (isCancelled) return }
 
-            tree.breakTrees(player.itemInMainHand())
-            tree.breakLeaves(player.itemInMainHand())
+        tree.breakTrees(tool.itemStack)
+        tree.breakLeaves()
+
+        if (CutTreesToolDamageEvent(tree, tool).call(plugin).isNotCancelled) {
+            event.player.sendMessage("Call CutTreesToolDamageEvent")
+            if (tool.damage(tree)) {
+                event.player.sendMessage("耐久値: ${tool.itemStack.getRemainingDurability()}")
+                if (tool.isBroken()) {
+                    event.player.onBreakItemInMainHand()
+                    event.player.sendMessage("道具が壊れた")
+                }
+            }
         }
-    }
-
-    fun ItemStack.isAxe() = when (type) {
-        Material.WOOD_AXE,
-        Material.STONE_AXE,
-        Material.GOLD_AXE,
-        Material.IRON_AXE,
-        Material.DIAMOND_AXE -> true
-        else -> false
     }
 }
 
