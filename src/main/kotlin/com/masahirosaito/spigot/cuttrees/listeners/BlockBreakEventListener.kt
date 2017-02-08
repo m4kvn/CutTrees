@@ -1,55 +1,59 @@
 package com.masahirosaito.spigot.cuttrees.listeners
 
 import com.masahirosaito.spigot.cuttrees.CutTrees
-import com.masahirosaito.spigot.cuttrees.CutTreesAbstract
-import com.masahirosaito.spigot.cuttrees.events.NoReduceTreeBreakEvent
-import com.masahirosaito.spigot.cuttrees.events.ReduceTreeBreakEvent
-import com.masahirosaito.spigot.cuttrees.utils.call
-import com.masahirosaito.spigot.cuttrees.utils.isCreativeMode
-import com.masahirosaito.spigot.cuttrees.utils.itemInMainHand
-import net.md_5.bungee.api.ChatColor
+import com.masahirosaito.spigot.cuttrees.events.CutTreesBreakEvent
+import com.masahirosaito.spigot.cuttrees.events.CutTreesEvent
+import com.masahirosaito.spigot.cuttrees.events.CutTreesIncrementStaticsEvent
+import com.masahirosaito.spigot.cuttrees.events.CutTreesToolDamageEvent
+import com.masahirosaito.spigot.cuttrees.players.CutTreesPlayer
+import com.masahirosaito.spigot.cuttrees.trees.*
+import com.masahirosaito.spigot.cuttrees.utils.*
+import org.bukkit.Material
+import org.bukkit.TreeSpecies
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 
-class BlockBreakEventListener(plugin: CutTrees) : CutTreesAbstract(plugin), Listener {
+class BlockBreakEventListener(val plugin: CutTrees) : Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onBlockBreak(event: BlockBreakEvent) {
         if (event.isCancelled) return
-        if (isInValid(event)) return antiBlockManager.remove(event.block)
 
-        debugMsg(event)
+        CutTreesEvent(event).call(plugin).apply { if (isCancelled) return }
 
-        if (isNotReduceDurability(event)) {
-            NoReduceTreeBreakEvent(event, plugin).call(plugin)
-        } else {
-            ReduceTreeBreakEvent(event, plugin).call(plugin)
+        val player = CutTreesPlayer(event.player).apply { if (!isValid()) return }
+
+        val tree = when {
+            event.block.isTree() -> when (event.block.asTree().species) {
+                TreeSpecies.GENERIC -> OakTree(event.block)
+                TreeSpecies.JUNGLE -> JungleTree(event.block)
+                TreeSpecies.DARK_OAK -> DarkOakTree(event.block)
+                TreeSpecies.BIRCH -> BirchTree(event.block)
+                TreeSpecies.ACACIA -> AcaciaTree(event.block)
+                TreeSpecies.REDWOOD -> RedWoodTree(event.block)
+                else -> return
+            }
+            event.block.isMushroom() -> when (event.block.asMushroom().itemType) {
+                Material.HUGE_MUSHROOM_1 -> WhiteMushroom(event.block)
+                Material.HUGE_MUSHROOM_2 -> RedMushroom(event.block)
+                else -> return
+            }
+            else -> return
         }
-    }
 
-    private fun debugMsg(event: BlockBreakEvent) {
-        messenger.debug(buildString {
-            append("${ChatColor.GOLD}")
-            append("[Valid Event] $event")
-            append("${ChatColor.RESET}")
-        })
-    }
+        CutTreesBreakEvent(tree, player).call(plugin).apply { if (isCancelled) return }
 
-    private fun isNotReduceDurability(event: BlockBreakEvent): Boolean = when {
-        (event.player.isCreativeMode() && !configs.onCreativeDurabilityReduce) -> true
-        (event.player.itemInMainHand().itemMeta.spigot().isUnbreakable) -> true
-        else -> false
-    }
+        tree.breakTree(player.tool)
 
-    private fun isInValid(event: BlockBreakEvent): Boolean {
-        return when {
-            !configs.isValidBlock(event.block) -> true.apply { messenger.debug("Block is InValid") }
-            !configs.isNotAnti(event.block) -> true.apply { messenger.debug("Block is AntiBlock") }
-            !configs.isValidTool(event.player.itemInMainHand()) -> true.apply { messenger.debug("Tool is InValid") }
-            !configs.isSneaking(event.player) -> true.apply { messenger.debug("Player is not Sneaking") }
-            else -> false
+        if (CutTreesToolDamageEvent(tree, player).call(plugin).isNotCancelled) {
+            player.DamageToTool(tree)
+        }
+
+        if (CutTreesIncrementStaticsEvent(tree, player).call(plugin).isNotCancelled) {
+            player.incrementStatics(tree)
         }
     }
 }
+
