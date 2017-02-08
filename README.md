@@ -2,7 +2,7 @@
 
 CutTrees は、木を簡単にきるための Spigot Plugin です。
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/nFoT79u2AEs" frameborder="0" allowfullscreen></iframe>
+[![](http://img.youtube.com/vi/nFoT79u2AEs/0.jpg)](http://www.youtube.com/watch?v=nFoT79u2AEs)
 
 斧を使って原木を破壊すると、その原木でできた木を破壊することができます。
 
