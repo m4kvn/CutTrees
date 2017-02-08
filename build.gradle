@@ -18,7 +18,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 group = 'com.MasahiroSaito.Spigot'
-version = 1.0
+version = 1.1
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -81,6 +81,7 @@ bintray {
     user = project.hasProperty("bintrayUser") ? bintrayUser : ""
     key = project.hasProperty("bintrayKey") ? bintrayKey : ""
     publications = ['mavenJava']
+    publish = true
     pkg {
         repo = 'cuttrees'
         name = 'CutTrees'
