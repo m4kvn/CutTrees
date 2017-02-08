@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import org.bukkit.Material
 import java.io.File
 
-data class ConfigsLoader(
+data class CutTreesConfig(
 
         @SerializedName("スニーキング状態の時に木をきる")
         val onSneaking: Boolean = false,
@@ -26,19 +26,19 @@ data class ConfigsLoader(
 ) {
     companion object {
 
-        fun load(file: File): ConfigsLoader {
+        fun load(file: File): CutTreesConfig {
 
             if (!file.parentFile.exists()) {
                 file.parentFile.mkdirs()
             }
 
-            var configs: ConfigsLoader
+            var configs: CutTreesConfig
 
             if (!file.exists()) {
-                configs = ConfigsLoader()
+                configs = CutTreesConfig()
                 file.createNewFile()
             } else {
-                configs = Gson().fromJson(file.readText(), ConfigsLoader::class.java)
+                configs = Gson().fromJson(file.readText(), CutTreesConfig::class.java)
             }
 
             file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(configs))
