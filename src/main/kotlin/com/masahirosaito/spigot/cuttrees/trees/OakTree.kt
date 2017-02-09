@@ -11,13 +11,13 @@ class OakTree(block: Block) : BaseTree(block) {
 
     override fun material(): Material = Material.LOG
 
-    override fun maxHeight(): Int = 9
+    override fun maxHeight(): Int = 10
 
     override fun minHeight(): Int = 4
 
     override fun leavesRange(): Int = 3
 
-    override fun maxLogBranch(): Int = 3
+    override fun maxLogBranch(): Int = 4
 
     override fun relativeRange(): Int = 1
 
