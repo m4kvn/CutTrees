@@ -1,14 +1,18 @@
 package com.masahirosaito.spigot.cuttrees.trees
 
+import com.masahirosaito.spigot.cuttrees.materials.DurabilityMaterial
 import com.masahirosaito.spigot.cuttrees.tools.CutTreesTool
 import com.masahirosaito.spigot.cuttrees.utils.getRelatives
 import org.bukkit.Material
 import org.bukkit.block.Block
+import org.bukkit.block.BlockFace
 
 abstract class BaseTree(val block: Block) {
     val stem = getStem(block)
     val blocks = getBlocks(stem)
     val leaves = getLeaves(blocks)
+
+    abstract fun growingOn(): Array<DurabilityMaterial>
 
     abstract fun material(): Material
 
@@ -30,11 +34,15 @@ abstract class BaseTree(val block: Block) {
 
     fun isValidHeight(blocks: MutableSet<Block>) = height(blocks).let { minHeight() <= it && it <= maxHeight() }
 
-    fun breakTree(tool: CutTreesTool? = null): Boolean {
+    fun isValidGrowing(blocks: MutableSet<Block>) =
+            growingOn().contains(DurabilityMaterial.new(getBottom(blocks).getRelative(BlockFace.DOWN)))
+
+    fun breakTree(tool: CutTreesTool): Boolean {
+        if (!isValidGrowing(blocks)) return false
         if (!isValidHeight(blocks)) return false
         if (!isValid(blocks)) return false
 
-        blocks.forEach { if (tool != null) it.breakNaturally(tool.itemStack) else it.breakNaturally() }
+        blocks.forEach { it.breakNaturally(tool.itemStack) }
         leaves.forEach { it.breakNaturally() }
 
         return true
