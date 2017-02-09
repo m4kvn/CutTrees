@@ -1,5 +1,6 @@
 package com.masahirosaito.spigot.cuttrees.trees
 
+import com.masahirosaito.spigot.cuttrees.materials.DurabilityMaterial
 import com.masahirosaito.spigot.cuttrees.utils.asLeaves
 import com.masahirosaito.spigot.cuttrees.utils.asTree
 import com.masahirosaito.spigot.cuttrees.utils.isLeaves
@@ -10,7 +11,11 @@ import org.bukkit.block.Block
 
 class AcaciaTree(block: Block) : BaseTree(block) {
 
-    override fun growingBlockMaterial(): Material = Material.DIRT
+    override fun growingOn() = arrayOf(
+            DurabilityMaterial(Material.DIRT, 0),
+            DurabilityMaterial(Material.DIRT, 1),
+            DurabilityMaterial(Material.GRASS, 0)
+    )
 
     override fun material(): Material = Material.LOG_2
 

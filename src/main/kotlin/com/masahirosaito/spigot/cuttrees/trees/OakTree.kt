@@ -1,5 +1,6 @@
 package com.masahirosaito.spigot.cuttrees.trees
 
+import com.masahirosaito.spigot.cuttrees.materials.DurabilityMaterial
 import com.masahirosaito.spigot.cuttrees.utils.*
 import org.bukkit.Material
 import org.bukkit.TreeSpecies
@@ -7,7 +8,11 @@ import org.bukkit.block.Block
 
 class OakTree(block: Block) : BaseTree(block) {
 
-    override fun growingBlockMaterial(): Material = Material.DIRT
+    override fun growingOn() = arrayOf(
+            DurabilityMaterial(Material.DIRT, 0),
+            DurabilityMaterial(Material.DIRT, 1),
+            DurabilityMaterial(Material.GRASS, 0)
+    )
 
     override fun material(): Material = Material.LOG
 

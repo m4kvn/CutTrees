@@ -1,5 +1,6 @@
 package com.masahirosaito.spigot.cuttrees.trees
 
+import com.masahirosaito.spigot.cuttrees.materials.DurabilityMaterial
 import com.masahirosaito.spigot.cuttrees.utils.asMushroom
 import com.masahirosaito.spigot.cuttrees.utils.isMushroom
 import org.bukkit.Material
@@ -7,7 +8,9 @@ import org.bukkit.block.Block
 
 class WhiteMushroom(block: Block) : BaseTree(block) {
 
-    override fun growingBlockMaterial(): Material = Material.DIRT
+    override fun growingOn() = arrayOf(
+            DurabilityMaterial(Material.DIRT, 2)
+    )
 
     override fun material(): Material = Material.HUGE_MUSHROOM_1
 
