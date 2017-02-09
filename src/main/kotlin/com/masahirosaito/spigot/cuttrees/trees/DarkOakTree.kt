@@ -10,6 +10,8 @@ import org.bukkit.block.Block
 
 class DarkOakTree(block: Block) : BaseTree(block) {
 
+    override fun growingBlockMaterial(): Material = Material.DIRT
+
     override fun material(): Material = Material.LOG_2
 
     override fun maxHeight(): Int = 9

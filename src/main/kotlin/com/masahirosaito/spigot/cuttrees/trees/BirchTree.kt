@@ -10,6 +10,8 @@ import org.bukkit.block.Block
 
 class BirchTree(block: Block) : BaseTree(block) {
 
+    override fun growingBlockMaterial(): Material = Material.DIRT
+
     override fun material(): Material = Material.LOG
 
     override fun maxHeight(): Int = 7

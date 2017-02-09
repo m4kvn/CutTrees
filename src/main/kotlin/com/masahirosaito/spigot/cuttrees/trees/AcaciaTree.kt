@@ -10,6 +10,8 @@ import org.bukkit.block.Block
 
 class AcaciaTree(block: Block) : BaseTree(block) {
 
+    override fun growingBlockMaterial(): Material = Material.DIRT
+
     override fun material(): Material = Material.LOG_2
 
     override fun maxHeight(): Int = 9
@@ -20,7 +22,7 @@ class AcaciaTree(block: Block) : BaseTree(block) {
 
     override fun maxLogBranch(): Int = 3
 
-    override fun relativeRange(): Int = 2
+    override fun relativeRange(): Int = 1
 
     override fun isValid(blocks: MutableSet<Block>): Boolean = true
 

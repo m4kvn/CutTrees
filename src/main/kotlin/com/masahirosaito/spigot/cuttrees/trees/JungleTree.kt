@@ -11,6 +11,8 @@ import org.bukkit.block.Block
 
 class JungleTree(block: Block) : BaseTree(block) {
 
+    override fun growingBlockMaterial(): Material = Material.DIRT
+
     override fun material(): Material = Material.LOG
 
     override fun maxHeight(): Int = block.world.maxHeight
@@ -21,7 +23,7 @@ class JungleTree(block: Block) : BaseTree(block) {
 
     override fun maxLogBranch(): Int = 5
 
-    override fun relativeRange(): Int = 2
+    override fun relativeRange(): Int = 1
 
     override fun isValid(blocks: MutableSet<Block>): Boolean = true
 

@@ -7,6 +7,8 @@ import org.bukkit.block.Block
 
 class RedMushroom(block: Block) : BaseTree(block) {
 
+    override fun growingBlockMaterial(): Material = Material.DIRT
+
     override fun material(): Material = Material.HUGE_MUSHROOM_2
 
     override fun maxHeight(): Int = 13
