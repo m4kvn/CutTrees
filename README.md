@@ -25,8 +25,8 @@ CutTrees は、木を簡単にきるための Spigot Plugin です。
 
 | CutTrees Version | Spigot Version |
 | :--------------: | :------------: |
-| [1.1](https://bintray.com/masahirosaito-repo/cuttrees/download_file?file_path=com%2FMasahiroSaito%2FSpigot%2FCutTrees%2F1.1%2FCutTrees-1.1.jar) | 1.11.2 |
-| [1.1](https://bintray.com/masahirosaito-repo/cuttrees/download_file?file_path=com%2FMasahiroSaito%2FSpigot%2FCutTrees%2F1.0%2FCutTrees-1.1.jar) | 1.10.2 |
+| [1.2](https://bintray.com/masahirosaito-repo/cuttrees/download_file?file_path=com%2FMasahiroSaito%2FSpigot%2FCutTrees%2F1.2%2FCutTrees-1.2.jar) | 1.11.* |
+| [1.2](https://bintray.com/masahirosaito-repo/cuttrees/download_file?file_path=com%2FMasahiroSaito%2FSpigot%2FCutTrees%2F1.2%2FCutTrees-1.2.jar) | 1.10.* |
 
 ## 使い方
 
@@ -73,7 +73,7 @@ Bintray : [https://bintray.com/masahirosaito-repo/cuttrees/CutTrees](https://bin
 <dependency>
   <groupId>com.MasahiroSaito.Spigot</groupId>
   <artifactId>CutTrees</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
   <type>pom</type>
 </dependency>
 ```
@@ -88,5 +88,5 @@ maven {
 ```
 
 ```gradle
-compile 'com.MasahiroSaito.Spigot:CutTrees:1.1'
+compile 'com.MasahiroSaito.Spigot:CutTrees:1.2'
 ```
