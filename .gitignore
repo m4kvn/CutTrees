@@ -5,3 +5,6 @@ src/test/
 build/
 out/
 gradle\.properties
+!/gradle.properties
+
+gradle\.properties
