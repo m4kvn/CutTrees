@@ -26,26 +26,17 @@ abstract class BaseTree(val block: Block) {
 
     abstract fun relativeRange(): Int
 
-    abstract fun isValid(blocks: MutableSet<Block>): Boolean
+    abstract fun isInValid(blocks: MutableSet<Block>): Boolean
 
     abstract fun isSame(block: Block): Boolean
 
     abstract fun isSameLeaves(block: Block): Boolean
 
-    fun isValidHeight(blocks: MutableSet<Block>) = height(blocks).let { minHeight() <= it && it <= maxHeight() }
+    fun isValid() = isValid(blocks)
 
-    fun isValidGrowing(blocks: MutableSet<Block>) =
-            growingOn().contains(DurabilityMaterial.new(getBottom(blocks).getRelative(BlockFace.DOWN)))
-
-    fun breakTree(tool: CutTreesTool): Boolean {
-        if (!isValidGrowing(blocks)) return false
-        if (!isValidHeight(blocks)) return false
-        if (!isValid(blocks)) return false
-
+    fun breakTree(tool: CutTreesTool) {
         blocks.forEach { it.breakNaturally(tool.itemStack) }
         leaves.forEach { it.breakNaturally() }
-
-        return true
     }
 
     fun height(blocks: MutableSet<Block>) = getTop(blocks).y - getBottom(blocks).y + 1
@@ -83,5 +74,20 @@ abstract class BaseTree(val block: Block) {
         }
 
         return checkedBlocks
+    }
+
+    private fun isValidHeight(blocks: MutableSet<Block>) =
+            height(blocks).let { minHeight() <= it && it <= maxHeight() }
+
+    private fun isValidGrowing(blocks: MutableSet<Block>) =
+            growingOn().contains(DurabilityMaterial.new(getBottom(blocks).getRelative(BlockFace.DOWN)))
+
+    private fun isValid(blocks: MutableSet<Block>): Boolean {
+        return when {
+            !isValidGrowing(blocks) -> false
+            !isValidHeight(blocks) -> false
+            isInValid(blocks) -> false
+            else -> true
+        }
     }
 }

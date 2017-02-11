@@ -30,7 +30,7 @@ class JungleTree(block: Block) : BaseTree(block) {
 
     override fun relativeRange(): Int = 1
 
-    override fun isValid(blocks: MutableSet<Block>): Boolean = true
+    override fun isInValid(blocks: MutableSet<Block>): Boolean = false
 
     override fun isSame(block: Block): Boolean {
         return if (block.isTree()) block.asTree().species == TreeSpecies.JUNGLE else false

@@ -41,11 +41,11 @@ class BlockBreakEventListener(val plugin: CutTrees) : Listener {
                 else -> return
             }
             else -> return
-        }
+        }.apply { if (!isValid()) return }
 
         CutTreesBreakEvent(tree, player).call(plugin).apply { if (isCancelled) return }
 
-        if (!tree.breakTree(player.tool)) return
+        tree.breakTree(player.tool)
 
         if (CutTreesToolDamageEvent(tree, player).call(plugin).isNotCancelled) {
             player.DamageToTool(tree)
