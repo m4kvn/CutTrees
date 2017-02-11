@@ -4,3 +4,5 @@ src/test/
 build/
 !/gradle.properties
 gradle\.properties
+
+\.idea/
