@@ -89,7 +89,6 @@ bintray {
         websiteUrl = 'https://github.com/MasahiroSaito/CutTrees'
         issueTrackerUrl = 'https://github.com/MasahiroSaito/CutTrees/issues'
         licenses = ['Apache-2.0']
-        publicDownloadNumbers = true
         githubRepo = 'MasahiroSaito/CutTrees'
         githubReleaseNotesFile = 'README.md'
     }
