@@ -1,4 +1,4 @@
 name: CutTrees
-version: @version@
+version: 1.4
 main: com.masahirosaito.spigot.cuttrees.CutTrees
 authors: [MasahiroSaito]

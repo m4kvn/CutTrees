@@ -16,13 +16,11 @@ class OakTree(block: Block) : BaseTree(block) {
 
     override fun material(): Material = Material.LOG
 
-    override fun maxHeight(): Int = 10
-
-    override fun minHeight(): Int = 4
+    override fun heightRange() = 4 to height()
 
     override fun leavesRange(): Int = 3
 
-    override fun maxLogBranch(): Int = 4
+    override fun branchRange(): Int = 4
 
     override fun relativeRange(): Int = 1
 
@@ -35,4 +33,6 @@ class OakTree(block: Block) : BaseTree(block) {
     override fun isSameLeaves(block: Block): Boolean {
         return if (block.isLeaves()) block.asLeaves().species == TreeSpecies.GENERIC else false
     }
+
+    override fun bottomsRange() = 1 to bottoms.size
 }

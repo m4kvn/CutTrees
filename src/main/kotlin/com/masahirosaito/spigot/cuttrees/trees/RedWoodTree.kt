@@ -17,19 +17,17 @@ class RedWoodTree(block: Block) : BaseTree(block) {
             DurabilityMaterial(Material.GRASS, 0)
     )
 
-    override fun material(): Material = Material.LOG
+    override fun material() = Material.LOG
 
-    override fun maxHeight(): Int = 29
+    override fun heightRange() = 4 to height()
 
-    override fun minHeight(): Int = 4
+    override fun leavesRange() = 4
 
-    override fun leavesRange(): Int = 4
+    override fun branchRange() = 1
 
-    override fun maxLogBranch(): Int = 1
+    override fun relativeRange() = 1
 
-    override fun relativeRange(): Int = 1
-
-    override fun isInValid(blocks: MutableSet<Block>): Boolean = false
+    override fun isInValid(blocks: MutableSet<Block>) = false
 
     override fun isSame(block: Block): Boolean {
         return if (block.isTree()) block.asTree().species == TreeSpecies.REDWOOD else false
@@ -38,4 +36,6 @@ class RedWoodTree(block: Block) : BaseTree(block) {
     override fun isSameLeaves(block: Block): Boolean {
         return if (block.isLeaves()) block.asLeaves().species == TreeSpecies.REDWOOD else false
     }
+
+    override fun bottomsRange() = 1 to 1
 }

@@ -17,19 +17,17 @@ class AcaciaTree(block: Block) : BaseTree(block) {
             DurabilityMaterial(Material.GRASS, 0)
     )
 
-    override fun material(): Material = Material.LOG_2
+    override fun material()  = Material.LOG_2
 
-    override fun maxHeight(): Int = 9
+    override fun heightRange() = 4 to 9
 
-    override fun minHeight(): Int = 4
+    override fun leavesRange() = 4
 
-    override fun leavesRange(): Int = 4
+    override fun branchRange() = 3
 
-    override fun maxLogBranch(): Int = 3
+    override fun relativeRange() = 1
 
-    override fun relativeRange(): Int = 1
-
-    override fun isInValid(blocks: MutableSet<Block>): Boolean = false
+    override fun isInValid(blocks: MutableSet<Block>) = false
 
     override fun isSame(block: Block): Boolean {
         return if (block.isTree()) block.asTree().species == TreeSpecies.ACACIA else false
@@ -39,4 +37,5 @@ class AcaciaTree(block: Block) : BaseTree(block) {
         return if (block.isLeaves()) block.asLeaves().species == TreeSpecies.ACACIA else false
     }
 
+    override fun bottomsRange() = 1 to 1
 }
