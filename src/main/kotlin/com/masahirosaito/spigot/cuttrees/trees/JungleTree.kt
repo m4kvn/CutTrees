@@ -18,19 +18,17 @@ class JungleTree(block: Block) : BaseTree(block) {
             DurabilityMaterial(Material.GRASS, 0)
     )
 
-    override fun material(): Material = Material.LOG
+    override fun material() = Material.LOG
 
-    override fun maxHeight(): Int = block.world.maxHeight
+    override fun heightRange() = 4 to height()
 
-    override fun minHeight(): Int = 4
+    override fun leavesRange() = 5
 
-    override fun leavesRange(): Int = 5
+    override fun branchRange() = 5
 
-    override fun maxLogBranch(): Int = 5
+    override fun relativeRange() = 1
 
-    override fun relativeRange(): Int = 1
-
-    override fun isValid(blocks: MutableSet<Block>): Boolean = true
+    override fun isInValid(blocks: MutableSet<Block>) = false
 
     override fun isSame(block: Block): Boolean {
         return if (block.isTree()) block.asTree().species == TreeSpecies.JUNGLE else false
@@ -39,4 +37,6 @@ class JungleTree(block: Block) : BaseTree(block) {
     override fun isSameLeaves(block: Block): Boolean {
         return if (block.isLeaves()) block.asLeaves().species == TreeSpecies.JUNGLE else false
     }
+
+    override fun bottomsRange() = 1 to 4
 }
